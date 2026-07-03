@@ -22,6 +22,23 @@ function showToast(msg, type = '') {
     setTimeout(() => t.remove(), 3000);
 }
 
+// ── Auto-label table cells for the mobile card layout ───────
+// Maps each column header onto its cells (data-label) so tables
+// can render as stacked cards on small screens — no per-page markup.
+(function () {
+    document.querySelectorAll('table.admin-table').forEach(function (table) {
+        var headers = [].map.call(table.querySelectorAll('thead th'), function (th) {
+            return th.textContent.trim();
+        });
+        if (!headers.length) return;
+        table.querySelectorAll('tbody tr').forEach(function (row) {
+            [].forEach.call(row.children, function (td, i) {
+                if (headers[i]) td.setAttribute('data-label', headers[i]);
+            });
+        });
+    });
+})();
+
 // ── New order polling ───────────────────────────────────────
 (function () {
     const LAST_ORDER_KEY = 'kn_admin_last_order_id';
