@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 (name, slug, category, subcategory, price, old_price, discount,
                  short_desc, description, material, size, color, pieces,
                  image_url, image_url2, image_url3, in_stock, stock_qty, is_new, is_bestseller, is_featured, is_offer, created_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
                ->execute([$name, $slug, $category, $subcategory, $price, $old_price, $discount,
                           $short_desc, $description, $material, $size, $color, $pieces,
                           $image_url, $image_url2, $image_url3, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer]);
