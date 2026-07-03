@@ -81,3 +81,48 @@ function getSettingVal(string $key, string $default = ''): string {
         return $default;
     }
 }
+
+// ── Self-healing schema ─────────────────────────────────────
+// Applies pending column/table additions automatically the first
+// time the dashboard is opened after an update — so the store owner
+// never has to run a migration script by hand. Gated by a version
+// flag in `settings` so it runs its work only once.
+function ensureSchema(): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $db = adminDB();
+        $current = 0;
+        try { $current = (int)$db->query("SELECT value FROM settings WHERE `key`='schema_version'")->fetchColumn(); } catch (Exception $e) {}
+        if ($current >= 2) return;
+
+        $alters = [
+            "ALTER TABLE products   ADD COLUMN image_url2 VARCHAR(500) DEFAULT NULL",
+            "ALTER TABLE products   ADD COLUMN image_url3 VARCHAR(500) DEFAULT NULL",
+            "ALTER TABLE categories ADD COLUMN image_url  VARCHAR(500) DEFAULT NULL",
+            "ALTER TABLE orders     ADD COLUMN stock_deducted TINYINT(1) NOT NULL DEFAULT 0",
+            "ALTER TABLE collections ADD COLUMN category VARCHAR(50) DEFAULT NULL",
+        ];
+        foreach ($alters as $sql) { try { $db->exec($sql); } catch (Exception $e) { /* already exists — fine */ } }
+
+        try {
+            $db->exec("CREATE TABLE IF NOT EXISTS `site_content` (
+                `content_key` VARCHAR(255) NOT NULL,
+                `page`        VARCHAR(60)  NOT NULL DEFAULT 'index',
+                `value`       LONGTEXT     DEFAULT NULL,
+                `type`        VARCHAR(20)  NOT NULL DEFAULT 'text',
+                `updated_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                PRIMARY KEY (`page`, `content_key`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        } catch (Exception $e) {}
+
+        try {
+            $db->prepare("INSERT INTO settings (`key`, value) VALUES ('schema_version','2')
+                          ON DUPLICATE KEY UPDATE value='2'")->execute();
+        } catch (Exception $e) {}
+    } catch (Exception $e) { /* never block the page on migration issues */ }
+}
+
+// Run the schema check whenever the admin bootstrap is loaded.
+ensureSchema();
