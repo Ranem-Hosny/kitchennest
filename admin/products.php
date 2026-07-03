@@ -64,7 +64,10 @@ include 'includes/layout-start.php';
     <div class="page-header-title">المنتجات</div>
     <div class="page-header-sub"><?= number_format($total) ?> منتج في قاعدة البيانات</div>
   </div>
-  <a href="product-form.php" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة منتج</a>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <a href="product-cleanup.php" class="btn btn-outline"><i class="fas fa-broom"></i> تنظيف التجريبية</a>
+    <a href="product-form.php" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة منتج</a>
+  </div>
 </div>
 
 <?php if (isset($_GET['msg'])): ?>
