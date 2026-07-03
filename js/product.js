@@ -84,12 +84,24 @@ if (!product) {
       <span class="product-meta__value">${m.value}</span>
     </div>`).join('');
 
-  // Stock
+  // Stock — show the actual quantity when known (dashboard products)
   const stockEl = document.getElementById('infoStock');
-  stockEl.innerHTML = product.inStock
-    ? `<span class="stock-dot"></span> متوفر — جاهز للشحن`
-    : `<span class="stock-dot stock-dot--out"></span> غير متوفر`;
-  stockEl.style.color = product.inStock ? 'var(--success)' : 'var(--danger)';
+  const qty = (typeof product.stockQty === 'number') ? product.stockQty : null;
+  if (!product.inStock || qty === 0) {
+    stockEl.innerHTML = `<span class="stock-dot stock-dot--out"></span> غير متوفر حالياً`;
+    stockEl.style.color = 'var(--danger)';
+  } else if (qty !== null && qty > 0) {
+    if (qty <= 5) {
+      stockEl.innerHTML = `<span class="stock-dot stock-dot--low"></span> باقٍ ${qty} ${qty === 1 ? 'قطعة' : 'قطع'} فقط في المخزون`;
+      stockEl.style.color = 'var(--warning, #B45309)';
+    } else {
+      stockEl.innerHTML = `<span class="stock-dot"></span> متوفر — ${qty} قطعة في المخزون`;
+      stockEl.style.color = 'var(--success)';
+    }
+  } else {
+    stockEl.innerHTML = `<span class="stock-dot"></span> متوفر — جاهز للشحن`;
+    stockEl.style.color = 'var(--success)';
+  }
 
   // Shipping fee note
   document.getElementById('shippingFeeNote').textContent = formatPrice(CONFIG.shippingFee);

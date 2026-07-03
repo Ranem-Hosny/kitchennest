@@ -596,6 +596,7 @@ h4 { font-size: 1.1rem; font-family: var(--font-main); }
 .product-info__stock { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
 .stock-dot { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--success); }
 .stock-dot--out { background: var(--danger); }
+.stock-dot--low { background: var(--warning, #B45309); }
 
 .qty-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
 .qty-label { font-size: 14px; font-weight: 500; }
