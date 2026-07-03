@@ -894,7 +894,12 @@ textarea.form-input { resize: vertical; min-height: 90px; }
   .header__search { display: none; }
   .header__nav { display: none; }
   .mobile-menu-btn { display: flex; }
-  .mobile-menu { display: flex; }
+  /* Closed menu stays display:none (from base) so it can't create horizontal
+     scroll / peek from the side; render it only when open. This also keeps
+     the sticky header intact (no overflow-x hacks needed). */
+  .mobile-menu { display: none; }
+  html[dir="rtl"] .mobile-menu--open,
+  html .mobile-menu--open { display: flex; transform: translateX(0); }
   .btn--wa.btn--sm { display: none; }
 
   .hero__slide { height: 380px; }
