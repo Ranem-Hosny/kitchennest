@@ -31,29 +31,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $color       = trim($_POST['color'] ?? '');
     $pieces      = (int)($_POST['pieces'] ?? 1);
     $image_url   = trim($_POST['image_url'] ?? '');
+    $image_url2  = trim($_POST['image_url2'] ?? '');
+    $image_url3  = trim($_POST['image_url3'] ?? '');
 
-    // Uploaded file (from device) takes priority over the URL field
-    if (!empty($_FILES['image_file']['name']) && $_FILES['image_file']['error'] !== UPLOAD_ERR_NO_FILE) {
-        $allowedExt = ['jpg' => true, 'jpeg' => true, 'png' => true, 'webp' => true, 'gif' => true];
-        $ext = strtolower(pathinfo($_FILES['image_file']['name'], PATHINFO_EXTENSION));
-
-        if ($_FILES['image_file']['error'] !== UPLOAD_ERR_OK) {
-            $errors[] = 'فشل رفع الصورة، حاول مرة أخرى.';
-        } elseif (!isset($allowedExt[$ext])) {
-            $errors[] = 'صيغة الصورة غير مدعومة. المسموح: JPG, PNG, WEBP, GIF.';
-        } elseif ($_FILES['image_file']['size'] > 5 * 1024 * 1024) {
-            $errors[] = 'حجم الصورة أكبر من 5 ميجابايت.';
-        } else {
-            $uploadDir = __DIR__ . '/../uploads/products/';
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-            $filename = 'p-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
-            if (move_uploaded_file($_FILES['image_file']['tmp_name'], $uploadDir . $filename)) {
-                $image_url = '/uploads/products/' . $filename;
-            } else {
-                $errors[] = 'فشل حفظ الصورة على الخادم.';
-            }
+    // Handle up to 3 product images. An uploaded file (from device) takes
+    // priority over the URL field; returns the resolved path (or the current value).
+    $uploadImg = function ($fileKey, $current) use (&$errors) {
+        if (empty($_FILES[$fileKey]['name']) || $_FILES[$fileKey]['error'] === UPLOAD_ERR_NO_FILE) {
+            return $current;
         }
-    }
+        $allowedExt = ['jpg' => 1, 'jpeg' => 1, 'png' => 1, 'webp' => 1, 'gif' => 1];
+        $ext = strtolower(pathinfo($_FILES[$fileKey]['name'], PATHINFO_EXTENSION));
+        if ($_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
+            $errors[] = 'فشل رفع إحدى الصور، حاول مرة أخرى.'; return $current;
+        }
+        if (!isset($allowedExt[$ext])) {
+            $errors[] = 'صيغة صورة غير مدعومة. المسموح: JPG, PNG, WEBP, GIF.'; return $current;
+        }
+        if ($_FILES[$fileKey]['size'] > 5 * 1024 * 1024) {
+            $errors[] = 'حجم إحدى الصور أكبر من 5 ميجابايت.'; return $current;
+        }
+        $uploadDir = __DIR__ . '/../uploads/products/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        $filename = 'p-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
+        if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $uploadDir . $filename)) {
+            return '/uploads/products/' . $filename;
+        }
+        $errors[] = 'فشل حفظ إحدى الصور على الخادم.'; return $current;
+    };
+    $image_url  = $uploadImg('image_file',  $image_url);
+    $image_url2 = $uploadImg('image_file2', $image_url2);
+    $image_url3 = $uploadImg('image_file3', $image_url3);
 
     $stock_qty     = max(0, (int)($_POST['stock_qty'] ?? 0));
     $in_stock      = isset($_POST['in_stock'])    ? 1 : 0;
@@ -73,11 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->prepare("UPDATE products SET
                 name=?, category=?, subcategory=?, price=?, old_price=?, discount=?,
                 short_desc=?, description=?, material=?, size=?, color=?, pieces=?,
-                image_url=?, in_stock=?, stock_qty=?, is_new=?, is_bestseller=?, is_featured=?, is_offer=?
+                image_url=?, image_url2=?, image_url3=?, in_stock=?, stock_qty=?, is_new=?, is_bestseller=?, is_featured=?, is_offer=?
                 WHERE id=?")
                ->execute([$name, $category, $subcategory, $price, $old_price, $discount,
                           $short_desc, $description, $material, $size, $color, $pieces,
-                          $image_url, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer,
+                          $image_url, $image_url2, $image_url3, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer,
                           $editId]);
             header('Location: products.php?msg=saved');
             exit;
@@ -85,11 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->prepare("INSERT INTO products
                 (name, slug, category, subcategory, price, old_price, discount,
                  short_desc, description, material, size, color, pieces,
-                 image_url, in_stock, stock_qty, is_new, is_bestseller, is_featured, is_offer, created_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
+                 image_url, image_url2, image_url3, in_stock, stock_qty, is_new, is_bestseller, is_featured, is_offer, created_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
                ->execute([$name, $slug, $category, $subcategory, $price, $old_price, $discount,
                           $short_desc, $description, $material, $size, $color, $pieces,
-                          $image_url, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer]);
+                          $image_url, $image_url2, $image_url3, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer]);
             header('Location: products.php?msg=saved');
             exit;
         }
@@ -271,7 +279,7 @@ include 'includes/layout-start.php';
     <!-- Image -->
     <div class="card">
       <div class="card-header">
-        <span class="card-title"><i class="fas fa-image" style="color:var(--info)"></i> صورة المنتج</span>
+        <span class="card-title"><i class="fas fa-images" style="color:var(--info)"></i> صور المنتج (حتى 3 صور)</span>
       </div>
       <div class="card-body">
         <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -305,6 +313,23 @@ include 'includes/layout-start.php';
                alt="معاينة"
                style="width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border);">
         </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0 8px">
+        <div class="form-hint" style="margin-bottom:10px;"><i class="fas fa-circle-info"></i> صورتان إضافيتان (اختياري) — تظهران كمعرض صور في صفحة المنتج.</div>
+
+        <?php foreach ([2, 3] as $n): $key = 'image_url' . $n; ?>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">صورة إضافية <?= $n ?></label>
+            <input type="file" name="image_file<?= $n ?>" class="form-control" accept=".jpg,.jpeg,.png,.webp,.gif"
+                   onchange="previewFileTo(this, 'imgPreview<?= $n ?>')" style="margin-bottom:6px;">
+            <input type="url" name="<?= $key ?>" class="form-control" placeholder="أو الصق رابط صورة (https://...)"
+                   value="<?= val($product, $key) ?>" oninput="previewUrlTo(this.value, 'imgPreview<?= $n ?>')">
+            <div style="margin-top:8px;display:<?= ($product[$key] ?? '') ? 'block' : 'none' ?>" id="imgPreview<?= $n ?>Wrap">
+              <img id="imgPreview<?= $n ?>" src="<?= val($product, $key) ?>" alt="معاينة <?= $n ?>"
+                   style="width:100%;max-height:150px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border);">
+            </div>
+          </div>
+        <?php endforeach; ?>
       </div>
     </div>
 
@@ -357,6 +382,21 @@ include 'includes/layout-start.php';
 </form>
 
 <script>
+// Preview helpers for the extra images (2 & 3)
+function previewUrlTo(url, imgId) {
+    var img = document.getElementById(imgId);
+    var wrap = document.getElementById(imgId + 'Wrap');
+    if (url) { img.src = url; wrap.style.display = 'block'; }
+    else { wrap.style.display = 'none'; }
+}
+function previewFileTo(input, imgId) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (e) { previewUrlTo(e.target.result, imgId); };
+    reader.readAsDataURL(file);
+}
+
 function previewImage(url) {
     const wrap = document.getElementById('imgPreviewWrap');
     const img  = document.getElementById('imgPreview');

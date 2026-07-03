@@ -42,7 +42,8 @@
           color: dbProduct.color || existing.color,
           pieces: dbProduct.pieces || existing.pieces,
           image: dbProduct.image || existing.image,
-          images: dbProduct.image ? [dbProduct.image] : existing.images,
+          images: (dbProduct.images && dbProduct.images.length) ? dbProduct.images
+                  : (dbProduct.image ? [dbProduct.image] : existing.images),
           inStock: dbProduct.inStock,
           isNew: dbProduct.isNew,
           isBestSeller: dbProduct.isBestSeller,

@@ -70,7 +70,7 @@ try {
             'color'       => $p['color'] ?: '',
             'pieces'      => (int)$p['pieces'],
             'image'       => $p['image_url'] ?: '',
-            'images'      => $p['image_url'] ? [$p['image_url']] : [],
+            'images'      => array_values(array_filter([$p['image_url'] ?? '', $p['image_url2'] ?? '', $p['image_url3'] ?? ''])),
             'inStock'     => (bool)$p['in_stock'],
             'isNew'       => (bool)$p['is_new'],
             'isBestSeller'=> (bool)$p['is_bestseller'],

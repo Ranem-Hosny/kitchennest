@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <p class="order-confirm__subtitle">تم استلام طلبك بنجاح. سيتواصل معك فريقنا قريباً لتأكيد التفاصيل.</p>
       <div class="order-confirm__btns">
         <a href="index.html" class="btn btn--primary btn--lg">متابعة التسوق</a>
-        <a href="https://wa.me/${CONFIG.whatsappNumber}" target="_blank" class="btn btn--wa btn--lg">تواصل عبر واتساب</a>
       </div>`;
     return;
   }
@@ -52,55 +51,50 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="order-confirm__icon"><i class="fa-solid fa-check"></i></div>
     <h1 class="order-confirm__title">تم تأكيد طلبك! <i class="fa-solid fa-party-horn"></i></h1>
     <p class="order-confirm__subtitle">
-      شكراً <strong>${order.name}</strong>! تم استلام طلبك بنجاح.
-      سنتواصل معك قريباً لتأكيد تفاصيل التوصيل.
+      شكراً <strong>${order.name}</strong>! تم استلام طلبك وتسجيله بنجاح.
+      سنتواصل معك هاتفياً لتأكيد تفاصيل التوصيل.
     </p>
     <div class="order-confirm__num">طلب رقم #${order.orderNum}</div>
 
     <div class="order-confirm__detail">
-      <h3></i> ملخص الطلب <i class="fa-solid fa-box"></h3>
+      <h3><i class="fa-solid fa-box"></i> ملخص الطلب</h3>
       ${order.items.map(i => `
         <div class="order-confirm__row">
-          <span>${i.name} × ${i.qty}</span>
-          <span>${formatPrice(i.price * i.qty)}</span>
+          <span class="order-confirm__label">${i.name} × ${i.qty}</span>
+          <span class="order-confirm__value">${formatPrice(i.price * i.qty)}</span>
         </div>`).join('')}
       <div class="order-confirm__row">
-        <span>المجموع الفرعي</span><span>${formatPrice(order.subtotal)}</span>
+        <span class="order-confirm__label">المجموع الفرعي</span><span class="order-confirm__value">${formatPrice(order.subtotal)}</span>
       </div>
       <div class="order-confirm__row">
-        <span>الشحن</span>
-        <span>${order.shipping > 0 ? formatPrice(order.shipping) : 'مجاني (استلام)'}</span>
+        <span class="order-confirm__label">الشحن</span>
+        <span class="order-confirm__value">${order.shipping > 0 ? formatPrice(order.shipping) : 'مجاني (استلام)'}</span>
       </div>
-      <div class="order-confirm__row" style="font-weight:700;font-size:16px;color:var(--primary)">
-        <span>الإجمالي المدفوع</span><span>${formatPrice(order.total)}</span>
+      <div class="order-confirm__row order-confirm__row--total">
+        <span class="order-confirm__label">الإجمالي المدفوع</span><span class="order-confirm__value">${formatPrice(order.total)}</span>
       </div>
     </div>
 
     <div class="order-confirm__detail" style="margin-bottom:32px">
-      <h3>تفاصيل التوصيل <i class="fa-solid fa-location-dot"></i></h3>
-      <div class="order-confirm__row"><span>الاسم</span><span>${order.name}</span></div>
-      <div class="order-confirm__row"><span>الهاتف</span><span>${order.phone}</span></div>
-      <div class="order-confirm__row"><span>واتساب</span><span>${order.whatsapp}</span></div>
-      <div class="order-confirm__row"><span>المدينة</span><span>${order.city}</span></div>
-      <div class="order-confirm__row"><span>المنطقة</span><span>${order.area}</span></div>
-      <div class="order-confirm__row"><span>العنوان</span><span style="text-align:right;max-width:280px">${order.address}</span></div>
-      <div class="order-confirm__row"><span>طريقة الاستلام</span><span>${order.deliveryMethod === 'delivery' ? '<i class="fa-solid fa-truck-fast"></i> توصيل للمنزل' : '<i class="fa-solid fa-store"></i> استلام'}</span></div>
-      ${order.notes ? `<div class="order-confirm__row"><span>الملاحظات</span><span>${order.notes}</span></div>` : ''}
-      <div class="order-confirm__row"><span>التاريخ</span><span>${order.orderDate}</span></div>
+      <h3><i class="fa-solid fa-location-dot"></i> تفاصيل التوصيل</h3>
+      <div class="order-confirm__row"><span class="order-confirm__label">الاسم</span><span class="order-confirm__value">${order.name}</span></div>
+      <div class="order-confirm__row"><span class="order-confirm__label">الهاتف</span><span class="order-confirm__value">${order.phone}</span></div>
+      <div class="order-confirm__row"><span class="order-confirm__label">المدينة</span><span class="order-confirm__value">${order.city}</span></div>
+      <div class="order-confirm__row"><span class="order-confirm__label">المنطقة</span><span class="order-confirm__value">${order.area}</span></div>
+      <div class="order-confirm__row"><span class="order-confirm__label">العنوان</span><span class="order-confirm__value order-confirm__value--addr">${order.address}</span></div>
+      <div class="order-confirm__row"><span class="order-confirm__label">طريقة الاستلام</span><span class="order-confirm__value">${order.deliveryMethod === 'delivery' ? '<i class="fa-solid fa-truck-fast"></i> توصيل للمنزل' : '<i class="fa-solid fa-store"></i> استلام من المتجر'}</span></div>
+      ${order.notes ? `<div class="order-confirm__row"><span class="order-confirm__label">الملاحظات</span><span class="order-confirm__value">${order.notes}</span></div>` : ''}
+      <div class="order-confirm__row"><span class="order-confirm__label">التاريخ</span><span class="order-confirm__value">${order.orderDate}</span></div>
     </div>
 
-    <div style="background:var(--primary-pale);border-radius:var(--radius-md);padding:20px;margin-bottom:32px;font-size:14px;color:var(--text-secondary)">
-      <strong><i class="fa-solid fa-phone"></i> ما الذي سيحدث بعد ذلك؟</strong><br>
-      سيتواصل معك فريقنا على واتساب <strong>${order.whatsapp}</strong> لتأكيد طلبك وترتيب التوصيل.
-      عادةً خلال 1-3 ساعات أثناء ساعات العمل. تحب تسرّع الأمر؟ تقدر تراسلنا دلوقتي بنفسك.
+    <div class="order-confirm__note">
+      <strong><i class="fa-solid fa-circle-check"></i> ما الخطوة التالية؟</strong><br>
+      تم تسجيل طلبك لدينا. سيتصل بك فريقنا هاتفياً على <strong>${order.phone}</strong>
+      لتأكيد الطلب وترتيب موعد التوصيل — عادةً خلال 1-3 ساعات في أوقات العمل.
     </div>
 
     <div class="order-confirm__btns">
-      <a href="index.html" class="btn btn--outline btn--lg"><i class="fa-solid fa-bag-shopping"></i> متابعة التسوق</a>
-      <a href="https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(order.waMsg || `مرحباً! لقد أرسلت طلب رقم #${order.orderNum}. هل يمكنك التأكيد؟`)}"
-         target="_blank" class="btn btn--wa btn--lg">
-        <i class="fa-brands fa-whatsapp"></i> راسلنا الآن (اختياري)
-      </a>
+      <a href="index.html" class="btn btn--primary btn--lg"><i class="fa-solid fa-bag-shopping"></i> متابعة التسوق</a>
     </div>`;
 });
 </script>

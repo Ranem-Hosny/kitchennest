@@ -50,6 +50,8 @@ $log .= runSQL($db, "
       `color`         VARCHAR(50)     DEFAULT NULL,
       `pieces`        TINYINT         NOT NULL DEFAULT 1,
       `image_url`     VARCHAR(500)    DEFAULT NULL,
+      `image_url2`    VARCHAR(500)    DEFAULT NULL,
+      `image_url3`    VARCHAR(500)    DEFAULT NULL,
       `in_stock`      TINYINT(1)      NOT NULL DEFAULT 1,
       `is_new`        TINYINT(1)      NOT NULL DEFAULT 0,
       `is_bestseller` TINYINT(1)      NOT NULL DEFAULT 0,
