@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تواصل معنا — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<div class="page-header">
+  <div class="container">
+    <h1>تواصل معنا</h1>
+    <p style="color:rgba(255,255,255,0.8);margin-top:8px">يسعدنا سماعك</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Form — first child → يظهر على اليمين في RTL -->
+      <div>
+        <div class="form-card">
+          <div class="form-card__title" style="margin-bottom:24px">أرسل لنا رسالة</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">الاسم الكامل <span class="required">*</span></label>
+              <input type="text" class="form-input" id="cName" placeholder="اسمك">
+            </div>
+            <div class="form-group">
+              <label class="form-label">الهاتف / واتساب</label>
+              <input type="tel" class="form-input" id="cPhone" placeholder="01234567890">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-input" id="cEmail" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">الموضوع <span class="required">*</span></label>
+            <select class="form-input" id="cSubject">
+              <option value="">اختر موضوعاً...</option>
+              <option>استفسار عن طلب</option>
+              <option>سؤال عن منتج</option>
+              <option>الإرجاع والاستبدال</option>
+              <option>مشكلة شحن</option>
+              <option>سؤال عام</option>
+              <option>ملاحظات واقتراحات</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">الرسالة <span class="required">*</span></label>
+            <textarea class="form-input" id="cMessage" rows="5" placeholder="كيف يمكننا مساعدتك؟"></textarea>
+          </div>
+          <button class="btn btn--primary btn--full" id="sendContactBtn">
+            إرسال الرسالة
+          </button>
+          <div id="contactSuccess" style="display:none;margin-top:16px;padding:16px;background:#f0fdf4;border-radius:var(--radius-sm);border:1px solid var(--success);color:var(--success);font-weight:600;text-align:center">
+            <i class="fa-solid fa-circle-check"></i> تم إرسال رسالتك! سنرد خلال ساعات.
+          </div>
+        </div>
+
+        <div style="background:var(--primary-pale);border-radius:var(--radius-md);padding:20px;margin-top:16px">
+          <strong><i class="fa-brands fa-whatsapp"></i> رد أسرع عبر واتساب!</strong>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:6px">
+            للأسئلة السريعة عن الطلبات والمنتجات، واتساب هو أسرع طريقة للوصول إلينا.
+          </p>
+          <a href="#" target="_blank" id="contactWaBtn" class="btn btn--wa btn--sm" style="margin-top:10px">
+            افتح واتساب
+          </a>
+        </div>
+      </div>
+
+      <!-- Info — second child → يظهر على الشمال في RTL -->
+      <div>
+        <h2 style="margin-bottom:28px">ابقَ على تواصل</h2>
+
+        <div class="contact-info__item">
+          <div class="contact-info__icon"><i class="fa-brands fa-whatsapp"></i></div>
+          <div>
+            <div class="contact-info__title">واتساب (مفضل)</div>
+            <div class="contact-info__value">
+              <a id="waContactLink" href="#" target="_blank">افتح محادثة واتساب</a><br>
+              <span id="waContactNum">جارٍ التحميل…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__icon"><i class="fa-solid fa-envelope"></i></div>
+          <div>
+            <div class="contact-info__title">البريد الإلكتروني</div>
+            <div class="contact-info__value"><a href="mailto:info@kitchennest.com" id="contactEmail">info@kitchennest.com</a></div>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__icon"><i class="fa-solid fa-phone"></i></div>
+          <div>
+            <div class="contact-info__title">الهاتف</div>
+            <div class="contact-info__value"><a id="contactPhone" href="#">جارٍ التحميل…</a></div>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div>
+            <div class="contact-info__title">الموقع</div>
+            <div class="contact-info__value" id="contactAddress">القاهرة، مصر</div>
+          </div>
+        </div>
+
+        <div class="contact-info__item">
+          <div class="contact-info__icon"><i class="fa-solid fa-clock"></i></div>
+          <div>
+            <div class="contact-info__title">ساعات العمل</div>
+            <div class="contact-info__value">
+              الأحد – الخميس: 9:00 ص – 9:00 م<br>
+              الجمعة – السبت: 11:00 ص – 8:00 م
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-map">
+          <i class="fa-solid fa-location-dot" style="font-size:32px;color:var(--primary)"></i>
+          <span style="margin-right:12px;color:var(--text-secondary)">القاهرة، مصر</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('waContactLink').href = `https://wa.me/${CONFIG.whatsappNumber}`;
+  document.getElementById('waContactLink').textContent = 'افتح محادثة واتساب';
+  document.getElementById('waContactNum').textContent = '+' + CONFIG.whatsappNumber;
+  document.getElementById('contactEmail').href = `mailto:${CONFIG.storeEmail}`;
+  document.getElementById('contactEmail').textContent = CONFIG.storeEmail;
+  document.getElementById('contactPhone').href = `tel:${CONFIG.storePhone.replace(/\s/g,'')}`;
+  document.getElementById('contactPhone').textContent = CONFIG.storePhone;
+  document.getElementById('contactAddress').textContent = CONFIG.storeAddress;
+  document.getElementById('contactWaBtn').href = `https://wa.me/${CONFIG.whatsappNumber}`;
+
+  document.getElementById('sendContactBtn')?.addEventListener('click', async () => {
+    const name = document.getElementById('cName').value.trim();
+    const message = document.getElementById('cMessage').value.trim();
+    const subject = document.getElementById('cSubject').value;
+    const phone = document.getElementById('cPhone').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+
+    if (!name || !message || !subject) {
+      showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+      return;
+    }
+    if (message.length < 10) {
+      showToast('الرسالة قصيرة جداً، أضف تفاصيل أكثر', 'error');
+      return;
+    }
+
+    // Save message to the store dashboard
+    try {
+      await fetch('php/contact.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email, subject, message }),
+      });
+    } catch (e) {
+      console.warn('[Contact] Failed to save message to database:', e);
+    }
+
+    const waMsg = `رسالة تواصل — ${CONFIG.storeName}\n\nالاسم: ${name}\nالهاتف: ${phone || 'غير مذكور'}\nالموضوع: ${subject}\nالرسالة: ${message}`;
+    window.open(`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(waMsg)}`, '_blank');
+    document.getElementById('contactSuccess').style.display = 'block';
+    document.getElementById('sendContactBtn').style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>

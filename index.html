@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بيت العوضي — أدوات مطبخ وأواني منزلية</title>
+  <meta name="description" content="تسوق أفضل أواني الطهي والمقالي وأطقم المائدة وأدوات المطبخ في بيت العوضي. جودة تصل لباب بيتك.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<!-- ═══ HERO CAROUSEL ═══ -->
+<section class="hero" id="heroCarousel">
+  <div class="hero__track" id="heroTrack">
+
+    <div class="hero__slide hero__slide--light">
+      <img src="/assets/header1.jpg" alt="أواني الطهي" class="hero__slide-img">
+      <div class="hero__overlay"></div>
+      <div class="hero__content animate-fade-in-up">
+        <span class="hero__eyebrow">مجموعة الموسم الجديد</span>
+        <h1 class="hero__title">اطبخ كالـ <span>محترفين</span></h1>
+        <p class="hero__subtitle">اكتشف أطقم الطهي الاحترافية — مصنوعة للنكهة، مصممة للجمال.</p>
+        <div class="hero__btns">
+          <a href="category.html?cat=cookware" class="btn btn--primary btn--lg">تسوق أواني الطهي</a>
+          <a href="offers.html" class="btn btn--ghost btn--lg">عرض الصفقات</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__slide hero__slide--light">
+      <img src="/assets/header2.jpg" alt="مقالي" class="hero__slide-img">
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <span class="hero__eyebrow"><i class="fa-solid fa-fire"></i> عروض حارة — خصم يصل إلى 30%</span>
+        <h1 class="hero__title">المقلاة <span>المثالية</span> في انتظارك</h1>
+        <p class="hero__subtitle">نون ستيك، حديد زهر، ستانلس ستيل — لدينا المقلاة المناسبة لكل طاهٍ.</p>
+        <div class="hero__btns">
+          <a href="category.html?cat=pans" class="btn btn--primary btn--lg">تسوق المقالي</a>
+          <a href="offers.html" class="btn btn--ghost btn--lg">جميع العروض</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__slide hero__slide--light hero__slide--text-left">
+      <img src="/assets/header3.jpg" alt="أطقم مائدة" class="hero__slide-img">
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <h1 class="hero__title">أطقم مائدة <span>رائعة</span></h1>
+        <div class="hero__divider"></div>
+        <p class="hero__subtitle">لأن تفاصيل مائدتك تعكس ذوقك</p>
+        <div class="hero__btns">
+          <a href="category.html?cat=dinner-sets" class="btn btn--primary btn--lg">تسوق الآن</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__slide hero__slide--light">
+      <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1400&h=520&fit=crop&q=80" alt="أدوات مطبخ" class="hero__slide-img">
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <span class="hero__eyebrow">أدوات مطبخ أساسية</span>
+        <h1 class="hero__title">جهّز مطبخ <span>أحلامك</span></h1>
+        <p class="hero__subtitle">من المضارب إلى ألواح التقطيع — الأدوات التي تجعل الطهي متعة.</p>
+        <div class="hero__btns">
+          <a href="category.html?cat=kitchen-tools" class="btn btn--primary btn--lg">تسوق الأدوات</a>
+          <a href="category.html?cat=baking" class="btn btn--ghost btn--lg">أدوات الخبز</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero__arrows">
+    <button class="hero__arrow" id="heroPrev" aria-label="السابق">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button class="hero__arrow" id="heroNext" aria-label="التالي">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="hero__dots" id="heroDots"></div>
+</section>
+
+<!-- ═══ CATEGORIES SLIDER ═══ -->
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__head">
+      <div class="section__title-group">
+        <span class="section__eyebrow">تسوق حسب الفئة</span>
+        <h2 class="section__title">اعثر على ما تحتاجه</h2>
+      </div>
+    </div>
+    <div class="cat-slider-wrap">
+      <button class="cat-slider-btn cat-slider-btn--left" id="catLeft" aria-label="تمرير يساراً">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <div class="cat-slider" id="catSlider"></div>
+      <button class="cat-slider-btn cat-slider-btn--right" id="catRight" aria-label="تمرير يميناً">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OFFER BANNERS ═══ -->
+<section class="section section--offers">
+  <div class="offers-header">
+    <div class="container">
+      <div class="offers-header__inner">
+        <div class="offers-header__left">
+          <span class="offers-tag"><i class="fa-solid fa-fire"></i> عروض</span>
+          <div>
+            <p class="offers-header__title">خصومات حارة على أدوات المطبخ</p>
+            <p class="offers-header__sub">وفّر حتى 30% على مختارات مميزة — لوقت محدود</p>
+          </div>
+        </div>
+        <a href="offers.html" class="offers-header__cta">
+          جميع العروض
+          <i class="fa-solid fa-chevron-left"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="container offers-body">
+    <div class="banners-grid" id="bannersGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ BEST SELLERS ═══ -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <div class="section__title-group">
+        <span class="section__eyebrow">الأكثر مبيعاً</span>
+        <h2 class="section__title">المنتجات الأكثر مبيعاً</h2>
+      </div>
+      <a href="category.html" class="section__view-all">
+        عرض الكل
+        <i class="fa-solid fa-chevron-left"></i>
+      </a>
+    </div>
+    <div class="product-grid" id="bestSellersGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ NEW ARRIVALS ═══ -->
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__head">
+      <div class="section__title-group">
+        <span class="section__eyebrow">وصل حديثاً</span>
+        <h2 class="section__title">منتجات جديدة</h2>
+      </div>
+      <a href="category.html?filter=new" class="section__view-all">
+        عرض الجديد
+        <i class="fa-solid fa-chevron-left"></i>
+      </a>
+    </div>
+    <div class="product-grid product-grid--5" id="newArrivalsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ FEATURED COLLECTIONS ═══ -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <div class="section__title-group">
+        <span class="section__eyebrow">مختارة لك</span>
+        <h2 class="section__title">مجموعات مختارة</h2>
+      </div>
+    </div>
+    <div class="collections-grid" id="collectionsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ WHY CHOOSE US ═══ -->
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__head" style="justify-content:center; text-align:center">
+      <div class="section__title-group">
+        <span class="section__eyebrow">وعدنا لك</span>
+        <h2 class="section__title">لماذا تتسوق من بيت العوضي؟</h2>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.05s">
+        <div class="why-card__icon"><i class="fa-solid fa-trophy"></i></div>
+        <div class="why-card__title">جودة عالية فقط</div>
+        <p class="why-card__desc">كل منتج مختار بعناية من حيث الجودة والمتانة والأداء. نحمل فقط العلامات التي نثق بها.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.1s">
+        <div class="why-card__icon"><i class="fa-solid fa-rocket"></i></div>
+        <div class="why-card__title">تجهيز وتوصيل سريع</div>
+        <p class="why-card__desc">الطلبات تُؤكد عبر واتساب وتُرسل خلال 24 ساعة. تابع طلبك في الوقت الفعلي.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.15s">
+        <div class="why-card__icon"><i class="fa-solid fa-comments"></i></div>
+        <div class="why-card__title">تأكيد الطلب عبر واتساب</div>
+        <p class="why-card__desc">أعطِ طلبك في دقائق عبر واتساب. فريقنا يؤكد التوفر وتفاصيل التوصيل شخصياً.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.2s">
+        <div class="why-card__icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="why-card__title">عملية آمنة وموثوقة</div>
+        <p class="why-card__desc">خصوصيتك وأمان دفعك أولويتنا. تأكيد رسوم الشحن عبر InstaPay بكل سهولة وأمان.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.25s">
+        <div class="why-card__icon"><i class="fa-solid fa-camera"></i></div>
+        <div class="why-card__title">صور حقيقية للمنتجات</div>
+        <p class="why-card__desc">لا صور مخزنة تختلف عن الواقع. كل صورة توضح ما ستستلمه فعلاً.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.3s">
+        <div class="why-card__icon"><i class="fa-solid fa-tags"></i></div>
+        <div class="why-card__title">أسعار تنافسية</div>
+        <p class="why-card__desc">نتفاوض مباشرة مع الموردين لنقدم لك أفضل الأسعار دون المساس بالجودة.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.35s">
+        <div class="why-card__icon"><i class="fa-solid fa-rotate-left"></i></div>
+        <div class="why-card__title">إرجاع سهل</div>
+        <p class="why-card__desc">غير راضٍ؟ تواصل معنا خلال 14 يوماً وسنرتب إرجاعاً أو استبدالاً بدون متاعب.</p>
+      </div>
+      <div class="why-card animate-fade-in-up" style="animation-delay:0.4s">
+        <div class="why-card__icon"><i class="fa-solid fa-star"></i></div>
+        <div class="why-card__title">موثوق من آلاف العملاء</div>
+        <p class="why-card__desc">انضم إلى أكثر من 10,000 عميل سعيد يطبخون بشكل أفضل مع منتجاتنا كل يوم.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CUSTOMER REVIEWS ═══ -->
+<section class="section">
+  <div class="container">
+    <div class="section__head" style="justify-content:center; text-align:center">
+      <div class="section__title-group">
+        <span class="section__eyebrow">ماذا يقول عملاؤنا</span>
+        <h2 class="section__title">يحبها محبو الطهي</h2>
+      </div>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ WHATSAPP CTA ═══ -->
+<section class="section">
+  <div class="container">
+    <div class="wa-cta">
+      <div class="wa-cta__icon"><i class="fa-brands fa-whatsapp"></i></div>
+      <h2 class="wa-cta__title">احصل على عروض حصرية عبر واتساب</h2>
+      <p class="wa-cta__desc">أرسل لنا رسالة وكن أول من يعلم بالمنتجات الجديدة، العروض الخاطفة، ونصائح المطبخ مباشرة إليك.</p>
+      <a href="#" target="_blank" id="waCtaBtn" class="btn btn--wa btn--lg">
+        <i class="fa-brands fa-whatsapp"></i>
+        تحدث عبر واتساب
+      </a>
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

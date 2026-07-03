@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إتمام الطلب — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<div class="page-header">
+  <div class="container">
+    <h1>إتمام الطلب</h1>
+    <div class="breadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="breadcrumb__sep">›</span>
+      <a href="cart.html">السلة</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>إتمام الطلب</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="emptyCartMsg" style="display:none;text-align:center;padding:60px 20px">
+      <div style="font-size:48px;margin-bottom:12px"><i class="fa-solid fa-cart-shopping"></i></div>
+      <h2>سلتك فارغة</h2>
+      <p style="color:var(--text-secondary);margin:8px 0 20px">يرجى إضافة منتجات قبل المتابعة للدفع.</p>
+      <a href="category.html" class="btn btn--primary">تسوق الآن</a>
+    </div>
+
+    <div class="checkout-layout" id="checkoutForm">
+
+      <!-- ── يسار: النماذج ── -->
+      <div>
+
+        <!-- 1. بيانات العميل -->
+        <div class="form-card">
+          <div class="form-card__title">
+            <div class="form-card__num">1</div>
+            معلومات العميل
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">الاسم الكامل <span class="required">*</span></label>
+              <input type="text" class="form-input" id="fullName" placeholder="أدخل اسمك الكامل">
+              <div class="form-error" id="errFullName">يرجى إدخال اسمك الكامل.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">رقم الهاتف <span class="required">*</span></label>
+              <input type="tel" class="form-input" id="phone" placeholder="مثال: 01234567890">
+              <div class="form-error" id="errPhone">يرجى إدخال رقم هاتف صحيح.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">رقم واتساب <span class="required">*</span></label>
+            <input type="tel" class="form-input" id="whatsapp" placeholder="رقم واتساب (قد يختلف عن الهاتف)">
+            <div class="form-error" id="errWhatsapp">يرجى إدخال رقم واتساب.</div>
+          </div>
+        </div>
+
+        <!-- 2. عنوان التوصيل -->
+        <div class="form-card">
+          <div class="form-card__title">
+            <div class="form-card__num">2</div>
+            عنوان التوصيل
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">المدينة <span class="required">*</span></label>
+              <input type="text" class="form-input" id="city" placeholder="مثال: القاهرة، الإسكندرية">
+              <div class="form-error" id="errCity">يرجى إدخال مدينتك.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">المنطقة / الحي <span class="required">*</span></label>
+              <input type="text" class="form-input" id="area" placeholder="مثال: المعادي، مدينة نصر">
+              <div class="form-error" id="errArea">يرجى إدخال منطقتك.</div>
+            </div>
+          </div>
+          <div class="form-group form-row--1">
+            <label class="form-label">العنوان الكامل <span class="required">*</span></label>
+            <textarea class="form-input" id="address" rows="3" placeholder="اسم الشارع، رقم المبنى، الشقة، الدور..."></textarea>
+            <div class="form-error" id="errAddress">يرجى إدخال عنوانك الكامل.</div>
+          </div>
+          <div class="form-group form-row--1">
+            <label class="form-label">ملاحظات الطلب (اختياري)</label>
+            <textarea class="form-input" id="notes" rows="2" placeholder="أي تعليمات أو طلبات خاصة..."></textarea>
+          </div>
+        </div>
+
+        <!-- 3. طريقة الاستلام -->
+        <div class="form-card">
+          <div class="form-card__title">
+            <div class="form-card__num">3</div>
+            طريقة الاستلام
+          </div>
+          <div class="delivery-options">
+            <label class="delivery-option delivery-option--active" id="optDelivery">
+              <input type="radio" name="deliveryMethod" value="delivery" checked>
+              <div class="delivery-option__title"><i class="fa-solid fa-truck-fast"></i> توصيل للمنزل</div>
+              <div class="delivery-option__desc">التوصيل لباب منزلك. 2-4 أيام عمل.</div>
+              <div class="delivery-option__fee">+ <span id="shippingFeeLabel"></span> رسوم شحن</div>
+            </label>
+            <label class="delivery-option" id="optPickup">
+              <input type="radio" name="deliveryMethod" value="pickup">
+              <div class="delivery-option__title"><i class="fa-solid fa-store"></i> استلام (إن كان متاحاً)</div>
+              <div class="delivery-option__desc">استلام من موقعنا. تواصل معنا أولاً للتأكيد.</div>
+              <div class="delivery-option__fee" style="color:var(--success)">بدون رسوم شحن</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 4. دفع رسوم الشحن عبر إنستاباي -->
+        <div class="form-card" id="instaPayCard">
+          <div class="form-card__title">
+            <div class="form-card__num">4</div>
+            دفع رسوم الشحن — إنستاباي
+          </div>
+          <div class="instapay-box">
+            <div class="instapay-box__title">
+              <i class="fa-solid fa-credit-card"></i> ادفع رسوم الشحن عبر إنستاباي
+            </div>
+            <div class="instapay-box__step">
+              <div class="instapay-box__step-num">1</div>
+              <div>افتح تطبيق البنك وانتقل إلى <strong>إنستاباي</strong></div>
+            </div>
+            <div class="instapay-box__step">
+              <div class="instapay-box__step-num">2</div>
+              <div>
+                أرسل بالضبط <span class="instapay-amount" id="instaPayAmount"></span> إلى:
+                <div class="instapay-number" id="instaPayPhone"><!-- set by JS --></div>
+              </div>
+            </div>
+            <div class="instapay-box__step">
+              <div class="instapay-box__step-num">3</div>
+              <div>خذ لقطة شاشة للتأكيد وأدخل رقم المعاملة أدناه.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px">
+            <div class="form-group">
+              <label class="form-label">رقم مرجع المعاملة</label>
+              <input type="text" class="form-input" id="transRef" placeholder="أدخل رقم مرجع معاملة إنستاباي (اختياري لكن مستحسن)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">صورة إثبات التحويل <span class="required">*</span></label>
+              <input type="file" class="form-input" id="paymentProof" accept=".jpg,.jpeg,.png,.webp">
+              <div class="form-error" id="errPaymentProof">يرجى إرفاق صورة إثبات التحويل — لن يتم اعتماد الطلب كمدفوع بدونها.</div>
+            </div>
+          </div>
+
+          <label class="confirm-checkbox" id="payConfirmLabel">
+            <input type="checkbox" id="payConfirm">
+            <span class="confirm-checkbox__label">
+              <i class="fa-solid fa-circle-check"></i> أؤكد أنني دفعت رسوم الشحن
+              <strong id="confirmFeeLabel"></strong> عبر إنستاباي إلى
+              <strong id="confirmPhoneLabel"></strong>
+            </span>
+          </label>
+          <div class="form-error" id="errPayConfirm" style="margin-top:-8px">يجب تأكيد دفع رسوم الشحن للمتابعة.</div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text-muted)">
+            <i class="fa-solid fa-shield-halved"></i> سيراجع فريقنا صورة التحويل ورقم المعاملة يدوياً قبل شحن الطلب.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── يمين: ملخص الطلب ── -->
+      <div>
+        <div class="order-summary">
+          <div class="order-summary__title">طلبك</div>
+          <div id="orderSummaryItems"></div>
+          <hr class="order-summary__divider">
+          <div class="order-summary__row"><span>المجموع الفرعي</span><span id="sumSubtotal"></span></div>
+          <div class="order-summary__row" id="shippingRow">
+            <span>الشحن</span><span id="sumShipping"></span>
+          </div>
+          <div class="order-summary__total-row">
+            <span>الإجمالي</span>
+            <span class="order-summary__total-price" id="sumTotal"></span>
+          </div>
+          <button class="btn btn--primary btn--full" style="margin-top:24px;padding:15px;font-size:16px" id="placeOrderBtn">
+            <i class="fa-solid fa-circle-check"></i> تأكيد الطلب
+          </button>
+          <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-muted)">
+            بتأكيد طلبك توافق على
+            <a href="terms.html" style="color:var(--primary)">الشروط والأحكام</a>
+          </div>
+        </div>
+
+        <div style="background:var(--primary-pale);border-radius:var(--radius-md);padding:16px;margin-top:16px;font-size:13px;color:var(--text-secondary)">
+          <strong><i class="fa-solid fa-shield-halved"></i> كيف يعمل:</strong><br>
+          1. أدخل بياناتك<br>
+          2. ادفع رسوم الشحن عبر إنستاباي وأرفق صورة الإثبات<br>
+          3. اضغط "تأكيد الطلب"<br>
+          4. سنراجع الدفع ونؤكد طلبك ونشحنه خلال 24 ساعة
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

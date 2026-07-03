@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<section class="section" style="padding-top:32px">
+  <div class="container">
+    <div class="breadcrumb" id="productBreadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="breadcrumb__sep">›</span>
+      <a href="category.html" id="breadCat">الفئة</a>
+      <span class="breadcrumb__sep">›</span>
+      <span id="breadProduct">المنتج</span>
+    </div>
+
+    <!-- ── تفاصيل المنتج ── -->
+    <div class="product-detail" id="productDetail">
+      <!-- Left: Gallery -->
+      <div class="product-gallery">
+        <div class="product-gallery__main">
+          <img id="mainImg" src="" alt="" class="product-gallery__main-img"
+               onerror="this.src='https://placehold.co/600x600/f5f5f5/999?text=Product'">
+        </div>
+        <div class="product-gallery__thumbs" id="thumbs"></div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="product-info" id="productInfo">
+        <a href="" class="product-info__cat" id="infoCategory"></a>
+        <h1 class="product-info__title" id="infoTitle"></h1>
+        <div class="product-info__rating">
+          <div id="infoStars"></div>
+          <span id="infoRating"></span>
+          <span class="product-info__rating-count" id="infoReviewCount"></span>
+        </div>
+        <div class="product-info__price-row">
+          <span class="product-info__price" id="infoPrice"></span>
+          <span class="product-info__old-price" id="infoOldPrice" style="display:none"></span>
+          <span class="badge badge--discount" id="infoDiscount" style="display:none"></span>
+        </div>
+        <p class="product-info__savings" id="infoSavings" style="display:none"></p>
+        <p class="product-info__desc" id="infoDesc"></p>
+        <div class="product-meta" id="productMeta"></div>
+        <div class="product-info__stock" id="infoStock"></div>
+        <div class="qty-row">
+          <span class="qty-label">الكمية:</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" id="qtyMinus">−</button>
+            <input type="number" class="qty-input" id="qtyInput" value="1" min="1" max="99">
+            <button class="qty-btn" id="qtyPlus">+</button>
+          </div>
+        </div>
+        <div class="product-actions">
+          <button class="btn btn--primary btn--lg" id="addToCartBtn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            أضف للسلة
+          </button>
+          <button class="btn btn--outline btn--lg" id="addToFavBtn">
+            <i class="fa-regular fa-heart"></i>
+            حفظ
+          </button>
+          <a href="" class="btn btn--wa btn--lg" id="waOrderBtn" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+            اطلب عبر واتساب
+          </a>
+        </div>
+        <div class="product-shipping-note">
+          <i class="fa-solid fa-truck-fast"></i>
+          <div>
+            <strong>الشحن:</strong> رسوم شحن ثابتة بقيمة <strong id="shippingFeeNote"></strong>.
+            تُدفع عبر إنستاباي قبل التوصيل. توصيل سريع خلال 2-4 أيام عمل.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── تبويبات المنتج ── -->
+    <div class="product-tabs">
+      <div class="tabs-nav">
+        <button class="tab-btn tab-btn--active" data-tab="description">الوصف</button>
+        <button class="tab-btn" data-tab="features">المميزات</button>
+        <button class="tab-btn" data-tab="specs">المواصفات</button>
+        <button class="tab-btn" data-tab="reviews">التقييمات</button>
+      </div>
+      <div class="tab-panel tab-panel--active" id="tab-description">
+        <p id="tabDesc" style="font-size:15px;color:var(--text-secondary);line-height:1.8"></p>
+      </div>
+      <div class="tab-panel" id="tab-features">
+        <ul class="features-list" id="featuresList"></ul>
+      </div>
+      <div class="tab-panel" id="tab-specs">
+        <table class="specs-table" id="specsTable"></table>
+      </div>
+      <div class="tab-panel" id="tab-reviews">
+        <div class="reviews-summary" id="reviewsSummary"></div>
+        <div id="productReviews"></div>
+      </div>
+    </div>
+
+    <!-- ── منتجات مشابهة ── -->
+    <div class="section" style="padding-top:48px">
+      <div class="section__head">
+        <div class="section__title-group">
+          <span class="section__eyebrow">قد يعجبك أيضاً</span>
+          <h2 class="section__title">منتجات مشابهة</h2>
+        </div>
+      </div>
+      <div class="product-grid product-grid--4" id="similarGrid"></div>
+    </div>
+
+    <!-- ── شاهدته مؤخراً ── -->
+    <div class="section" id="recentSection" style="padding-top:24px;display:none">
+      <div class="section__head">
+        <div class="section__title-group">
+          <span class="section__eyebrow">سجل التصفح</span>
+          <h2 class="section__title">شاهدته مؤخراً</h2>
+        </div>
+      </div>
+      <div class="product-grid" id="recentGrid"></div>
+    </div>
+
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script src="js/product.js"></script>
+</body>
+</html>

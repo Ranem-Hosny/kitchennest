@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المفضلة — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<div class="page-header">
+  <div class="container">
+    <h1>المفضلة</h1>
+    <div class="breadcrumb">
+      <a href="index.html">الرئيسية</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>المفضلة</span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container" id="favsContainer"></div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('favsContainer');
+  const products = FAVORITES.getProducts();
+
+  if (products.length === 0) {
+    container.innerHTML = `
+      <div class="fav-empty">
+        <div class="fav-empty__icon"><i class="fa-regular fa-heart"></i></div>
+        <h2 class="fav-empty__title">لا توجد مفضلات بعد</h2>
+        <p class="fav-empty__sub">المنتجات التي تحبها ستظهر هنا. تصفح واضغط أيقونة القلب!</p>
+        <a href="category.html" class="btn btn--primary btn--lg">تصفح المنتجات</a>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <h2 style="font-size:1.2rem">${products.length} منتج محفوظ</h2>
+      <button class="btn btn--outline btn--sm" style="color:var(--danger);border-color:var(--danger)" onclick="clearFavs()">
+        مسح جميع المفضلات
+      </button>
+    </div>
+    <div class="product-grid" id="favsGrid"></div>`;
+
+  document.getElementById('favsGrid').innerHTML = products.map(p => buildProductCard(p)).join('');
+});
+
+function clearFavs() {
+  if (confirm('هل تريد إزالة جميع المفضلات؟')) {
+    [...FAVORITES.getIds()].forEach(id => FAVORITES.toggle(id));
+    location.reload();
+  }
+}
+</script>
+</body>
+</html>

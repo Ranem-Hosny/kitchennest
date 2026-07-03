@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الفئات — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+  <style>
+    .filter-mobile-toggle { display:none; }
+    @media(max-width:768px) {
+      .filter-mobile-toggle { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    }
+    .no-results { text-align:center; padding:60px 20px; }
+    .no-results__icon { font-size:48px; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+
+<section class="section">
+  <div class="container">
+
+    <!-- Category Banner -->
+    <div id="catBanner" class="cat-banner" style="display:none">
+      <img id="catBannerImg" src="" alt="" class="cat-banner__img">
+      <div class="cat-banner__overlay">
+        <h2 class="cat-banner__title" id="catBannerTitle"></h2>
+        <p class="cat-banner__count" id="catBannerCount"></p>
+      </div>
+    </div>
+
+    <!-- Subcategory pills -->
+    <div id="subcatPills" class="subcat-pills" style="margin-bottom:24px"></div>
+
+    <div class="category-layout">
+
+      <!-- Sidebar filters -->
+      <button class="filter-mobile-toggle btn btn--outline btn--sm" id="filterToggleBtn">
+        <i class="fa-solid fa-sliders"></i>
+        فلترة
+      </button>
+
+      <aside class="filter-sidebar" id="filterSidebar">
+        <div class="filter-title">
+          فلترة
+          <span class="filter-clear" id="clearFilters">مسح الكل</span>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+          <div class="filter-group__heading">نطاق السعر</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input type="number" id="priceMin" placeholder="أدنى" class="form-input" style="padding:8px">
+            <input type="number" id="priceMax" placeholder="أقصى" class="form-input" style="padding:8px">
+          </div>
+          <input type="range" class="filter-range" id="priceRange" min="0" max="2000" value="2000" step="50">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:4px">
+            <span>0 ج.م</span><span id="priceRangeVal">2000 ج.م</span>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-group">
+          <div class="filter-group__heading">أدنى تقييم</div>
+          <label class="filter-option"><input type="radio" name="rating" value="0"> كل التقييمات</label>
+          <label class="filter-option"><input type="radio" name="rating" value="4"> <i class="fa-solid fa-star" style="color:#FF6B00;font-size:12px"></i> 4+ نجوم</label>
+          <label class="filter-option"><input type="radio" name="rating" value="4.5"> <i class="fa-solid fa-star" style="color:#FF6B00;font-size:12px"></i> 4.5+ نجوم</label>
+        </div>
+
+        <!-- Availability -->
+        <div class="filter-group">
+          <div class="filter-group__heading">التوفر</div>
+          <label class="filter-option"><input type="checkbox" id="filterInStock"> متوفر فقط</label>
+          <label class="filter-option"><input type="checkbox" id="filterOffers"> عروض / خصومات</label>
+          <label class="filter-option"><input type="checkbox" id="filterNew"> وصل حديثاً</label>
+        </div>
+
+        <!-- Material -->
+        <div class="filter-group">
+          <div class="filter-group__heading">المادة</div>
+          <div id="materialFilters"></div>
+        </div>
+
+        <button class="btn btn--primary btn--full" id="applyFilters">تطبيق الفلترة</button>
+      </aside>
+
+      <!-- Product area -->
+      <div>
+        <div class="product-toolbar">
+          <span class="product-count" id="productCount">جارٍ التحميل...</span>
+          <div style="display:flex;gap:12px;align-items:center">
+            <select class="sort-select" id="sortSelect">
+              <option value="default">ترتيب: افتراضي</option>
+              <option value="newest">الأحدث أولاً</option>
+              <option value="bestselling">الأكثر مبيعاً</option>
+              <option value="price-asc">السعر: من الأقل للأعلى</option>
+              <option value="price-desc">السعر: من الأعلى للأقل</option>
+              <option value="rating">الأعلى تقييماً</option>
+            </select>
+            <div class="view-btns">
+              <button class="view-btn view-btn--active" id="gridView" title="عرض شبكي">
+                <i class="fa-solid fa-grip"></i>
+              </button>
+              <button class="view-btn" id="listView" title="عرض قائمة">
+                <i class="fa-solid fa-list"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+
+        <div id="noResults" class="no-results" style="display:none">
+          <div class="no-results__icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <h3>لا توجد منتجات</h3>
+          <p style="color:var(--text-secondary);margin:8px 0 20px">جرب تعديل الفلترة أو استخدم بحثاً مختلفاً.</p>
+          <button class="btn btn--primary" id="resetResults">مسح الفلترة</button>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script src="js/category.js"></script>
+</body>
+</html>

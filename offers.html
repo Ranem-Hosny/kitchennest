@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العروض والخصومات — بيت العوضي</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🍳</text></svg>">
+</head>
+<body>
+
+<div id="siteHeader"></div>
+
+<!-- Offers Hero -->
+<div class="offers-hero">
+  <div class="container">
+    <h1><i class="fa-solid fa-fire"></i> عروض خاصة</h1>
+    <p>عروض محدودة المدة على أدوات المطبخ المميزة</p>
+    <div class="countdown" id="countdown">
+      <div class="countdown__block"><div class="countdown__num" id="cH">00</div><div class="countdown__label">ساعات</div></div>
+      <div class="countdown__block"><div class="countdown__num" id="cM">00</div><div class="countdown__label">دقائق</div></div>
+      <div class="countdown__block"><div class="countdown__num" id="cS">00</div><div class="countdown__label">ثوانٍ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Discount filter tabs -->
+<section class="section">
+  <div class="container">
+    <div class="subcat-pills" style="justify-content:center;margin-bottom:32px" id="discountTabs">
+      <button class="subcat-pill subcat-pill--active" data-min="0">جميع العروض</button>
+      <button class="subcat-pill" data-min="20">خصم 20%+</button>
+      <button class="subcat-pill" data-min="25">خصم 25%+</button>
+      <button class="subcat-pill" data-min="28">خصم 28%+</button>
+    </div>
+    <div class="product-grid" id="offersGrid"></div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/products-sync.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/components.js"></script>
+<script>
+// Countdown timer (ends in ~24h from page load)
+(function() {
+  let end = sessionStorage.getItem('kn_offer_end');
+  if (!end) { end = Date.now() + 23 * 3600000 + 59 * 60000 + 59000; sessionStorage.setItem('kn_offer_end', end); }
+  function tick() {
+    const diff = Math.max(0, parseInt(end) - Date.now());
+    document.getElementById('cH').textContent = String(Math.floor(diff/3600000)).padStart(2,'0');
+    document.getElementById('cM').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('cS').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+// Render offers
+let minDiscount = 0;
+function renderOffers() {
+  const offers = getOffers(48).filter(p => p.discount >= minDiscount);
+  document.getElementById('offersGrid').innerHTML = offers.length
+    ? offers.map(p => buildProductCard(p)).join('')
+    : '<div style="text-align:center;grid-column:1/-1;padding:40px;color:var(--text-muted)">لا توجد عروض بهذا الخصم حالياً. تفقد مرة أخرى قريباً!</div>';
+}
+
+document.getElementById('discountTabs').addEventListener('click', e => {
+  const btn = e.target.closest('[data-min]');
+  if (!btn) return;
+  minDiscount = parseInt(btn.dataset.min);
+  document.querySelectorAll('#discountTabs .subcat-pill').forEach(b => b.classList.toggle('subcat-pill--active', b === btn));
+  renderOffers();
+});
+
+document.addEventListener('DOMContentLoaded', renderOffers);
+</script>
+</body>
+</html>

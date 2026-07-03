@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kitchennest",
+      "runtimeExecutable": "C:/xampp/php/php.exe",
+      "runtimeArgs": ["-S", "localhost:8001", "-t", "D:/Freelanse/ALawady/kitchennest"],
+      "port": 8001
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+// ============================================================
+//  js/home.js  —  الصفحة الرئيسية: الهيرو، البانرات، الفئات، المنتجات
+// ============================================================
+
+// ── Hero Carousel ──────────────────────────────────────────
+(function () {
+  const track = document.getElementById('heroTrack');
+  const dotsEl = document.getElementById('heroDots');
+  if (!track) return;
+  const slides = track.querySelectorAll('.hero__slide');
+  let current = 0;
+  let autoPlay;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'hero__dot' + (i === 0 ? ' hero__dot--active' : '');
+    d.setAttribute('aria-label', `شريحة ${i + 1}`);
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    current = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(${current * 100}%)`;
+    dotsEl.querySelectorAll('.hero__dot').forEach((d, i) =>
+      d.classList.toggle('hero__dot--active', i === current));
+    resetAuto();
+  }
+
+  function resetAuto() {
+    clearInterval(autoPlay);
+    autoPlay = setInterval(() => goTo(current + 1), 5500);
+  }
+
+  document.getElementById('heroPrev')?.addEventListener('click', () => goTo(current - 1));
+  document.getElementById('heroNext')?.addEventListener('click', () => goTo(current + 1));
+
+  let startX = 0;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+  });
+
+  resetAuto();
+})();
+
+// ── بانرات العروض ──────────────────────────────────────────
+const BANNERS = [
+  {
+    tag: '<i class="fa-solid fa-fire"></i> عرض حار',
+    title: 'أواني الطهي — خصم يصل إلى 30%',
+    sub: 'قدور ومقالي احترافية بأسعار لا تُقاوم',
+    link: 'category.html?cat=cookware',
+    cta: 'تسوق الآن',
+    img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&h=300&fit=crop&q=80',
+    offer: 'خصم 30%',
+  },
+  {
+    tag: '<i class="fa-solid fa-screwdriver-wrench"></i> عرض مجموعة',
+    title: 'طقم أدوات المطبخ',
+    sub: 'طقم سيليكون متكامل 8 قطع',
+    link: 'category.html?cat=kitchen-tools',
+    cta: 'اشتري الطقم',
+    img: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=220&fit=crop&q=80',
+    offer: 'خصم 25%',
+  },
+  {
+    tag: '<i class="fa-solid fa-bowl-food"></i> مجموعة جديدة',
+    title: 'أطقم المائدة الفاخرة',
+    sub: 'بورسلين وستون وير لـ 4-6 أشخاص',
+    link: 'category.html?cat=dinner-sets',
+    cta: 'اكتشف الأطقم',
+    img: 'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=400&h=220&fit=crop&q=80',
+    offer: 'جديد',
+  },
+  {
+    tag: '<i class="fa-solid fa-truck-fast"></i> شحن مجاني',
+    title: 'الأواني الزجاجية الأساسية',
+    sub: 'كؤوس بلورية وأكواب مزدوجة الجدار',
+    link: 'category.html?cat=glassware',
+    cta: 'تسوق الزجاجيات',
+    img: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=220&fit=crop&q=80',
+    offer: 'توصيل مجاني',
+  },
+  {
+    tag: '<i class="fa-solid fa-fire"></i> عرض حار',
+    title: 'مقالي غير لاصقة',
+    sub: 'اطبخ بدون ما يعلق — تنظيف سهل',
+    link: 'category.html?cat=pans',
+    cta: 'تسوق المقالي',
+    img: 'https://images.unsplash.com/photo-1592156328697-079f6ee0cfa5?w=400&h=220&fit=crop&q=80',
+    offer: 'خصم 20%',
+  },
+  {
+    tag: '<i class="fa-solid fa-cookie-bite"></i> عرض خاص',
+    title: 'أدوات الخبز والفرن',
+    sub: 'صواني وقوالب لأشهى المخبوزات',
+    link: 'category.html?cat=baking',
+    cta: 'اكتشف الآن',
+    img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&h=220&fit=crop&q=80',
+    offer: 'خصم 15%',
+  },
+];
+
+const bannersGrid = document.getElementById('bannersGrid');
+if (bannersGrid) {
+  bannersGrid.innerHTML = BANNERS.map(b => `
+    <a href="${b.link}" class="banner-card">
+      <img src="${b.img}" alt="${b.title}" class="banner-card__img" loading="lazy"
+           onerror="this.src='https://placehold.co/700x300/222/fff?text=Banner'">
+      <div class="banner-card__overlay">
+        <span class="banner-card__tag">${b.tag}</span>
+        <div class="banner-card__title">${b.title}</div>
+        <div class="banner-card__sub">${b.sub}</div>
+        <span class="banner-card__cta">${b.cta} ←</span>
+      </div>
+      ${b.offer ? `<span class="banner-card__discount">${b.offer}</span>` : ''}
+    </a>`).join('');
+}
+
+// ── سلايدر الفئات ─────────────────────────────────────────
+const catSlider = document.getElementById('catSlider');
+if (catSlider) {
+  catSlider.innerHTML = CATEGORIES.map(c => `
+    <a href="category.html?cat=${c.id}" class="cat-card">
+      <span class="cat-card__icon">${c.icon}</span>
+      <span class="cat-card__name">${c.name}</span>
+    </a>`).join('');
+
+  document.getElementById('catLeft')?.addEventListener('click', () => {
+    catSlider.scrollBy({ left: 240, behavior: 'smooth' });
+    resetCatAuto();
+  });
+  document.getElementById('catRight')?.addEventListener('click', () => {
+    catSlider.scrollBy({ left: -240, behavior: 'smooth' });
+    resetCatAuto();
+  });
+
+  // ── تحريك تلقائي ──
+  let catAutoTimer;
+  function catAutoStep() {
+    const before = catSlider.scrollLeft;
+    catSlider.scrollBy({ left: -240, behavior: 'smooth' });
+    setTimeout(() => {
+      if (Math.abs(catSlider.scrollLeft - before) < 5) {
+        catSlider.scrollTo({ left: 0, behavior: 'smooth' });
+      }
+    }, 500);
+  }
+  function startCatAuto() {
+    clearInterval(catAutoTimer);
+    catAutoTimer = setInterval(catAutoStep, 1800);
+  }
+  function stopCatAuto() { clearInterval(catAutoTimer); }
+  function resetCatAuto() { stopCatAuto(); startCatAuto(); }
+
+  catSlider.addEventListener('mouseenter', stopCatAuto);
+  catSlider.addEventListener('mouseleave', startCatAuto);
+  catSlider.addEventListener('touchstart', stopCatAuto, { passive: true });
+  catSlider.addEventListener('touchend', startCatAuto);
+
+  startCatAuto();
+}
+
+// ── الأكثر مبيعاً ─────────────────────────────────────────
+const bestSellersGrid = document.getElementById('bestSellersGrid');
+if (bestSellersGrid) {
+  bestSellersGrid.innerHTML = getBestSellers(8).map(p => buildProductCard(p)).join('');
+}
+
+// ── وصل حديثاً ────────────────────────────────────────────
+const newArrivalsGrid = document.getElementById('newArrivalsGrid');
+if (newArrivalsGrid) {
+  newArrivalsGrid.innerHTML = getNewArrivals(5).map(p => buildProductCard(p)).join('');
+}
+
+// ── مجموعات مميزة ─────────────────────────────────────────
+// تُدار من لوحة التحكم (admin/collections.php → php/collections-api.php).
+// المصفوفة أدناه احتياطية فقط في حال تعذّر الوصول للـ API.
+const COLLECTIONS_FALLBACK = [
+  { title: 'أساسيات مطبخ رمضان', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop&q=80', link: 'category.html?cat=pots', count: 24 },
+  { title: 'أطقم طهي عائلية', img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&q=80', link: 'category.html?cat=cookware', count: 18 },
+  { title: 'أدوات خبز احترافية', img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&h=300&fit=crop&q=80', link: 'category.html?cat=baking', count: 15 },
+  { title: 'أدوات مطبخ يومية', img: 'https://images.unsplash.com/photo-1614588168022-d23f1f0f5b01?w=400&h=300&fit=crop&q=80', link: 'category.html?cat=kitchen-tools', count: 32 },
+];
+
+function loadCollections() {
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'php/collections-api.php?_=' + Date.now(), false); // synchronous, cache-busted
+    xhr.send(null);
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      if (data.success && Array.isArray(data.collections) && data.collections.length) {
+        return data.collections;
+      }
+    }
+  } catch (e) {
+    console.warn('[Collections] Failed to load from API, using fallback:', e);
+  }
+  return COLLECTIONS_FALLBACK;
+}
+
+// عدد منتجات الفئة يُحسب تلقائياً من المنتجات الفعلية (ثابتة + المضافة من اللوحة)
+function collectionCount(c) {
+  if (c.cat && typeof PRODUCTS !== 'undefined') {
+    return PRODUCTS.filter(p => p.category === c.cat).length;
+  }
+  return c.count || 0;
+}
+
+const collectionsGrid = document.getElementById('collectionsGrid');
+if (collectionsGrid) {
+  collectionsGrid.innerHTML = loadCollections().map(c => `
+    <a href="${c.link || '#'}" class="collection-card">
+      <img src="${c.img}" alt="${c.title}" class="collection-card__img" loading="lazy"
+           onerror="this.src='https://placehold.co/400x300/333/fff?text=${encodeURIComponent(c.title)}'">
+      <div class="collection-card__overlay">
+        <div class="collection-card__title">${c.title}</div>
+        <div class="collection-card__count">${collectionCount(c)} منتج</div>
+        <div class="collection-card__arrow">←</div>
+      </div>
+    </a>`).join('');
+}
+
+// ── آراء العملاء ─────────────────────────────────────────
+const REVIEWS = [
+  { name: 'سارة أحمد', rating: 5, comment: 'أحببت طقم الطهي الجديد! الجودة رائعة والطلاء غير اللاصق لا يزال ممتازاً بعد شهور من الاستخدام اليومي.', date: 'مارس 2025', initial: 'س' },
+  { name: 'محمد علي', rating: 5, comment: 'طلبت عبر واتساب والتجربة كانت سلسة جداً. وصل طقم السكاكين في تغليف رائع. جودة فاقت توقعاتي!', date: 'أبريل 2025', initial: 'م' },
+  { name: 'ليلى حسن', rating: 5, comment: 'طقم المائدة مذهل! ضيوفي دائماً يثنون على الأطباق الجميلة. التوصيل كان سريعاً والتغليف ممتاز.', date: 'فبراير 2025', initial: 'ل' },
+  { name: 'عمر خالد', rating: 4, comment: 'أسعار رائعة مقابل جودة حقيقية. طقم أدوات السيليكون غيّر طريقة طهيي. سأطلب مرة أخرى بالتأكيد.', date: 'يناير 2025', initial: 'ع' },
+  { name: 'نور إبراهيم', rating: 5, comment: 'حافظات الطعام الزجاجية هي بالضبط ما كنت أبحث عنه. شفافة، محكمة الإغلاق، والجودة أفضل مما توقعت.', date: 'مارس 2025', initial: 'ن' },
+  { name: 'فاطمة يوسف', rating: 5, comment: 'البراد التركي رائع! يعمل بشكل مثالي في كل مرة. خدمة العملاء كانت ودودة ومفيدة جداً على واتساب.', date: 'أبريل 2025', initial: 'ف' },
+];
+
+const reviewsGrid = document.getElementById('reviewsGrid');
+if (reviewsGrid) {
+  reviewsGrid.innerHTML = REVIEWS.map(r => `
+    <div class="review-card">
+      <div class="review-card__header">
+        <div class="review-card__avatar">${r.initial}</div>
+        <div>
+          <div class="review-card__name">${r.name}</div>
+          <div style="display:flex;gap:4px;margin:3px 0">${renderStars(r.rating)}</div>
+          <div class="review-card__date">${r.date}</div>
+        </div>
+      </div>
+      <p class="review-card__comment">${r.comment}</p>
+    </div>`).join('');
+}
+
+// رابط واتساب CTA
+const waCtaBtn = document.getElementById('waCtaBtn');
+if (waCtaBtn) {
+  waCtaBtn.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent('مرحباً ' + CONFIG.storeName + '! أود الاستفسار عن منتجاتكم.')}`;
+}
