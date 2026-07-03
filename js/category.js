@@ -10,9 +10,27 @@ let filteredProducts = [];
 const catId = getParam('cat');
 const searchQ = getParam('q');
 const filterParam = getParam('filter');
+const collectionId = getParam('collection');
 
 // Determine category
 const category = catId ? CATEGORIES.find(c => c.id === catId) : null;
+
+// If viewing a featured collection, look up its title for the heading
+let collectionTitle = '';
+if (collectionId) {
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'php/collections-api.php?_=' + Date.now(), false);
+    xhr.send(null);
+    if (xhr.status === 200) {
+      const d = JSON.parse(xhr.responseText);
+      if (d.success && Array.isArray(d.collections)) {
+        const found = d.collections.find(x => String(x.id) === String(collectionId));
+        if (found) collectionTitle = found.title;
+      }
+    }
+  } catch (e) { /* ignore */ }
+}
 
 // Set page header
 const pageTitle = document.getElementById('catPageTitle');
@@ -22,6 +40,10 @@ const catBanner = document.getElementById('catBanner');
 if (searchQ) {
   if (pageTitle) pageTitle.textContent = `نتائج البحث: "${searchQ}"`;
   if (breadcrumb) breadcrumb.textContent = `نتائج البحث: "${searchQ}"`;
+} else if (collectionId) {
+  const t = collectionTitle || 'مجموعة مختارة';
+  if (pageTitle) pageTitle.textContent = t;
+  if (breadcrumb) breadcrumb.textContent = t;
 } else if (category) {
   if (pageTitle) pageTitle.textContent = category.name;
   if (breadcrumb) breadcrumb.textContent = category.name;
@@ -71,6 +93,7 @@ function buildMaterialFilters(products) {
 // Get base products
 function getBaseProducts() {
   if (searchQ) return searchProducts(searchQ);
+  if (collectionId) return PRODUCTS.filter(p => p.collectionId === parseInt(collectionId));
   if (filterParam === 'new') return getNewArrivals(50);
   if (catId) return getProductsByCategory(catId);
   return PRODUCTS;

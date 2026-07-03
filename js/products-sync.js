@@ -46,6 +46,7 @@
                   : (dbProduct.image ? [dbProduct.image] : existing.images),
           inStock: dbProduct.inStock,
           stockQty: dbProduct.stockQty,
+          collectionId: dbProduct.collectionId,
           isNew: dbProduct.isNew,
           isBestSeller: dbProduct.isBestSeller,
           isFeatured: dbProduct.isFeatured,

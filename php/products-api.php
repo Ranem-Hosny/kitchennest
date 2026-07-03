@@ -73,6 +73,7 @@ try {
             'images'      => array_values(array_filter([$p['image_url'] ?? '', $p['image_url2'] ?? '', $p['image_url3'] ?? ''])),
             'inStock'     => (bool)$p['in_stock'],
             'stockQty'    => isset($p['stock_qty']) ? (int)$p['stock_qty'] : null,
+            'collectionId'=> !empty($p['collection_id']) ? (int)$p['collection_id'] : null,
             'isNew'       => (bool)$p['is_new'],
             'isBestSeller'=> (bool)$p['is_bestseller'],
             'isFeatured'  => (bool)$p['is_featured'],

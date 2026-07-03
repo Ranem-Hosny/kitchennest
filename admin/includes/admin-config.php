@@ -95,11 +95,12 @@ function ensureSchema(): void {
         $db = adminDB();
         $current = 0;
         try { $current = (int)$db->query("SELECT value FROM settings WHERE `key`='schema_version'")->fetchColumn(); } catch (Exception $e) {}
-        if ($current >= 2) return;
+        if ($current >= 3) return;
 
         $alters = [
             "ALTER TABLE products   ADD COLUMN image_url2 VARCHAR(500) DEFAULT NULL",
             "ALTER TABLE products   ADD COLUMN image_url3 VARCHAR(500) DEFAULT NULL",
+            "ALTER TABLE products   ADD COLUMN collection_id INT DEFAULT NULL",
             "ALTER TABLE categories ADD COLUMN image_url  VARCHAR(500) DEFAULT NULL",
             "ALTER TABLE orders     ADD COLUMN stock_deducted TINYINT(1) NOT NULL DEFAULT 0",
             "ALTER TABLE collections ADD COLUMN category VARCHAR(50) DEFAULT NULL",
@@ -118,8 +119,8 @@ function ensureSchema(): void {
         } catch (Exception $e) {}
 
         try {
-            $db->prepare("INSERT INTO settings (`key`, value) VALUES ('schema_version','2')
-                          ON DUPLICATE KEY UPDATE value='2'")->execute();
+            $db->prepare("INSERT INTO settings (`key`, value) VALUES ('schema_version','3')
+                          ON DUPLICATE KEY UPDATE value='3'")->execute();
         } catch (Exception $e) {}
     } catch (Exception $e) { /* never block the page on migration issues */ }
 }

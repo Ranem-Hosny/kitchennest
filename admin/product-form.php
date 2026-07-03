@@ -14,6 +14,10 @@ if ($editId) {
     if (!$product) { header('Location: products.php'); exit; }
 }
 
+// Collections for the "featured collection" dropdown
+$collectionsList = [];
+try { $collectionsList = $db->query('SELECT id, title FROM collections ORDER BY sort_order, id')->fetchAll(); } catch (Exception $e) {}
+
 $errors = [];
 $flash  = '';
 
@@ -75,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image_url2 = $uploadImg('image_file2', $image_url2);
     $image_url3 = $uploadImg('image_file3', $image_url3);
 
+    // Featured collection (optional — empty means "no collection")
+    $collection_id = (($_POST['collection_id'] ?? '') !== '') ? (int)$_POST['collection_id'] : null;
+
     $stock_qty     = max(0, (int)($_POST['stock_qty'] ?? 0));
     $in_stock      = isset($_POST['in_stock'])    ? 1 : 0;
     $is_new        = isset($_POST['is_new'])      ? 1 : 0;
@@ -91,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($editId) {
             $db->prepare("UPDATE products SET
-                name=?, category=?, subcategory=?, price=?, old_price=?, discount=?,
+                name=?, category=?, collection_id=?, subcategory=?, price=?, old_price=?, discount=?,
                 short_desc=?, description=?, material=?, size=?, color=?, pieces=?,
                 image_url=?, image_url2=?, image_url3=?, in_stock=?, stock_qty=?, is_new=?, is_bestseller=?, is_featured=?, is_offer=?
                 WHERE id=?")
-               ->execute([$name, $category, $subcategory, $price, $old_price, $discount,
+               ->execute([$name, $category, $collection_id, $subcategory, $price, $old_price, $discount,
                           $short_desc, $description, $material, $size, $color, $pieces,
                           $image_url, $image_url2, $image_url3, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer,
                           $editId]);
@@ -103,11 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             $db->prepare("INSERT INTO products
-                (name, slug, category, subcategory, price, old_price, discount,
+                (name, slug, category, collection_id, subcategory, price, old_price, discount,
                  short_desc, description, material, size, color, pieces,
                  image_url, image_url2, image_url3, in_stock, stock_qty, is_new, is_bestseller, is_featured, is_offer, created_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
-               ->execute([$name, $slug, $category, $subcategory, $price, $old_price, $discount,
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, NOW())")
+               ->execute([$name, $slug, $category, $collection_id, $subcategory, $price, $old_price, $discount,
                           $short_desc, $description, $material, $size, $color, $pieces,
                           $image_url, $image_url2, $image_url3, $in_stock, $stock_qty, $is_new, $is_bestseller, $is_featured, $is_offer]);
             header('Location: products.php?msg=saved');
@@ -172,6 +179,21 @@ include 'includes/layout-start.php';
                 </option>
               <?php endforeach; ?>
             </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">
+              المجموعة المختارة
+              <a href="collections.php" style="font-size:11.5px;font-weight:500;color:var(--primary);margin-right:6px;">إدارة المجموعات</a>
+            </label>
+            <select name="collection_id" class="form-control">
+              <option value="">— بدون مجموعة —</option>
+              <?php foreach ($collectionsList as $col): ?>
+                <option value="<?= (int)$col['id'] ?>" <?= (string)($product['collection_id'] ?? '') === (string)$col['id'] ? 'selected' : '' ?>>
+                  <?= esc($col['title']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <span class="form-hint">اختياري — لو اخترتِ مجموعة، المنتج يظهر ضمنها في الصفحة الرئيسية.</span>
           </div>
           <div class="form-group">
             <label class="form-label">الفئة الفرعية</label>

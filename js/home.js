@@ -134,26 +134,34 @@ function loadCollections() {
   return COLLECTIONS_FALLBACK;
 }
 
-// عدد منتجات الفئة يُحسب تلقائياً من المنتجات الفعلية (ثابتة + المضافة من اللوحة)
-function collectionCount(c) {
-  if (c.cat && typeof PRODUCTS !== 'undefined') {
-    return PRODUCTS.filter(p => p.category === c.cat).length;
+// كل مجموعة: لو فيها منتجات متعيّنة ليها مباشرةً نعرضها ونربط عليها،
+// وإلا نرجع للسلوك القديم (ربط بالفئة وعدّها).
+function collectionMeta(c) {
+  var assigned = (typeof PRODUCTS !== 'undefined' && c.id)
+    ? PRODUCTS.filter(p => p.collectionId === c.id).length : 0;
+  if (assigned > 0) {
+    return { link: 'category.html?collection=' + c.id, count: assigned };
   }
-  return c.count || 0;
+  var catCount = (c.cat && typeof PRODUCTS !== 'undefined')
+    ? PRODUCTS.filter(p => p.category === c.cat).length : (c.count || 0);
+  return { link: c.link || '#', count: catCount };
 }
 
 const collectionsGrid = document.getElementById('collectionsGrid');
 if (collectionsGrid) {
-  collectionsGrid.innerHTML = loadCollections().map(c => `
-    <a href="${c.link || '#'}" class="collection-card">
+  collectionsGrid.innerHTML = loadCollections().map(c => {
+    const m = collectionMeta(c);
+    return `
+    <a href="${m.link}" class="collection-card">
       <img src="${c.img}" alt="${c.title}" class="collection-card__img" loading="lazy"
            onerror="this.src='https://placehold.co/400x300/333/fff?text=${encodeURIComponent(c.title)}'">
       <div class="collection-card__overlay">
         <div class="collection-card__title">${c.title}</div>
-        <div class="collection-card__count">${collectionCount(c)} منتج</div>
+        <div class="collection-card__count">${m.count} منتج</div>
         <div class="collection-card__arrow">←</div>
       </div>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 }
 
 // رابط واتساب CTA
