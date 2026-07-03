@@ -1,10 +1,12 @@
 <?php
 // Admin database config — does NOT set JSON headers (unlike php/config.php)
-define('ADMIN_DB_HOST',    'localhost');
-define('ADMIN_DB_NAME',    'kitchennest_db');
-define('ADMIN_DB_USER',    'root');
-define('ADMIN_DB_PASS',    '');
-define('ADMIN_DB_CHARSET', 'utf8mb4');
+// القيم تُقرأ من ملف واحد مشترك: php/db-credentials.php
+$__db = require __DIR__ . '/../../php/db-credentials.php';
+define('ADMIN_DB_HOST',    $__db['host']);
+define('ADMIN_DB_NAME',    $__db['name']);
+define('ADMIN_DB_USER',    $__db['user']);
+define('ADMIN_DB_PASS',    $__db['pass']);
+define('ADMIN_DB_CHARSET', $__db['charset']);
 
 // Product categories are stored in the `categories` table (see admin/categories.php)
 function getCategoryList(): array {

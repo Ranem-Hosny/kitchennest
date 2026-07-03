@@ -5,11 +5,13 @@
 // ============================================================
 
 // ── Database credentials ────────────────────────────────────
-define('DB_HOST', 'localhost');       // ← CHANGE if needed
-define('DB_NAME', 'kitchennest_db'); // ← Your database name
-define('DB_USER', 'root');           // ← Your DB username
-define('DB_PASS', '');               // ← Your DB password
-define('DB_CHARSET', 'utf8mb4');
+// القيم تُقرأ من ملف واحد مشترك: php/db-credentials.php
+$__db = require __DIR__ . '/db-credentials.php';
+define('DB_HOST', $__db['host']);
+define('DB_NAME', $__db['name']);
+define('DB_USER', $__db['user']);
+define('DB_PASS', $__db['pass']);
+define('DB_CHARSET', $__db['charset']);
 
 // ── Store WhatsApp number ───────────────────────────────────
 define('WHATSAPP_NUMBER', '201234567890'); // ← CHANGE THIS

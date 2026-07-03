@@ -8,15 +8,13 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
-define('DB_HOST_C', 'localhost');
-define('DB_NAME_C', 'kitchennest_db');
-define('DB_USER_C', 'root');
-define('DB_PASS_C', '');
+// Shared DB credentials (php/db-credentials.php)
+$__db = require __DIR__ . '/db-credentials.php';
 
 try {
     $pdo = new PDO(
-        'mysql:host='.DB_HOST_C.';dbname='.DB_NAME_C.';charset=utf8mb4',
-        DB_USER_C, DB_PASS_C,
+        'mysql:host='.$__db['host'].';dbname='.$__db['name'].';charset='.$__db['charset'],
+        $__db['user'], $__db['pass'],
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
     );
 } catch (Exception $e) {
