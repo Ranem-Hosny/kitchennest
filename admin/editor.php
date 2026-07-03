@@ -27,6 +27,12 @@ include 'includes/layout-start.php';
   .ed-sections h4 { font-size:14px; margin-bottom:10px; }
   .ed-sec-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--border-light); }
   .ed-sec-item:last-child { border-bottom:none; }
+  .ed-img-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; }
+  .ed-img-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; text-align:center; background:var(--bg); }
+  .ed-img-card img { width:100%; height:80px; object-fit:cover; display:block; background:#eee; }
+  .ed-img-card button { width:100%; border:0; border-top:1px solid var(--border); background:#fff; padding:7px; font-size:12px; font-weight:600; color:var(--primary); cursor:pointer; font-family:inherit; }
+  .ed-img-card button:hover { background:var(--primary-bg); }
+  .ed-img-card span { font-size:10px; color:var(--text-muted); display:block; padding:3px; }
   .ed-switch { position:relative; width:44px; height:24px; flex-shrink:0; }
   .ed-switch input { opacity:0; width:0; height:0; }
   .ed-slider { position:absolute; inset:0; background:#cbd5e1; border-radius:24px; cursor:pointer; transition:.2s; }
@@ -43,6 +49,7 @@ include 'includes/layout-start.php';
 <div class="ed-toolbar">
   <button class="btn btn-primary btn-sm" id="edToggle"><i class="fas fa-pen"></i> تفعيل التعديل</button>
   <button class="btn btn-outline btn-sm" id="edSections"><i class="fas fa-layer-group"></i> السكاشن</button>
+  <button class="btn btn-outline btn-sm" id="edImages"><i class="fas fa-images"></i> الصور</button>
   <button class="btn btn-outline btn-sm" id="edDevice" title="معاينة الموبايل"><i class="fas fa-mobile-screen"></i></button>
   <span class="ed-badge off" id="edMode">وضع المعاينة</span>
   <span class="ed-dirty" id="edDirty"></span>
@@ -54,6 +61,11 @@ include 'includes/layout-start.php';
 <div class="ed-sections" id="edSectionsPanel">
   <h4><i class="fas fa-layer-group" style="color:var(--primary)"></i> إظهار / إخفاء أقسام الصفحة</h4>
   <div id="edSectionsList"><div class="text-muted" style="font-size:13px">فعّل التعديل أولاً لعرض الأقسام.</div></div>
+</div>
+
+<div class="ed-sections" id="edImagesPanel">
+  <h4><i class="fas fa-images" style="color:var(--primary)"></i> كل صور الصفحة — اضغط "تغيير" على أي صورة</h4>
+  <div class="ed-img-grid" id="edImagesList"><div class="text-muted" style="font-size:13px">فعّل التعديل أولاً لعرض الصور.</div></div>
 </div>
 
 <div class="ed-frame-wrap" id="edFrameWrap">
@@ -86,6 +98,7 @@ include 'includes/layout-start.php';
   var dirty = {};                 // key -> {key, value, type}
   var editing = false;
   var currentImg = null;
+  var currentThumb = null;
 
   var DYNAMIC = '[id$="Grid"], .cat-slider, .cat-slider-wrap, .banners-grid, .reviews-grid, .collections-grid, .product-grid, #siteHeader, #siteFooter';
   var TEXT_TAGS = {H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,P:1,SPAN:1,A:1,BUTTON:1,LI:1};
@@ -155,6 +168,7 @@ include 'includes/layout-start.php';
     }, true);
     injectStyle();
     buildSections();
+    buildImages();
     editing = true;
   }
 
@@ -173,7 +187,11 @@ include 'includes/layout-start.php';
   function onImg(e){
     if (!editing) return;
     e.preventDefault(); e.stopPropagation();
-    currentImg = e.currentTarget;
+    openImgDialog(e.currentTarget, null);
+  }
+
+  function openImgDialog(img, thumbEl){
+    currentImg = img; currentThumb = thumbEl || null;
     document.getElementById('edImgUrl').value = '';
     document.getElementById('edImgFile').value = '';
     document.getElementById('edImgStatus').textContent = '';
@@ -204,6 +222,25 @@ include 'includes/layout-start.php';
     if (!secs.length) list.innerHTML = '<div class="text-muted" style="font-size:13px">لا توجد أقسام.</div>';
   }
 
+  // ── Images list (reliable way to change any image incl. hero) ─
+  function buildImages(){
+    var d = doc();
+    var list = document.getElementById('edImagesList');
+    list.innerHTML = '';
+    var imgs = [].filter.call(d.querySelectorAll('img'), function(im){ return !im.closest(DYNAMIC); });
+    if (!imgs.length) { list.innerHTML = '<div class="text-muted" style="font-size:13px">لا توجد صور قابلة للتعديل في هذه الصفحة.</div>'; return; }
+    imgs.forEach(function(im, i){
+      var card = document.createElement('div'); card.className = 'ed-img-card';
+      var label = (im.getAttribute('alt') || ('صورة ' + (i+1))).slice(0, 24);
+      var thumb = document.createElement('img'); thumb.src = im.src; thumb.alt = label;
+      var name = document.createElement('span'); name.textContent = label;
+      var btn = document.createElement('button'); btn.type = 'button'; btn.innerHTML = '<i class="fas fa-arrows-rotate"></i> تغيير';
+      btn.addEventListener('click', function(){ openImgDialog(im, thumb); });
+      card.appendChild(thumb); card.appendChild(name); card.appendChild(btn);
+      list.appendChild(card);
+    });
+  }
+
   // ── Save ──────────────────────────────────────────────────
   function save(){
     var items = Object.keys(dirty).map(function(k){ return dirty[k]; });
@@ -229,6 +266,7 @@ include 'includes/layout-start.php';
   function applyImg(url){
     if (!currentImg) return;
     currentImg.src = url;
+    if (currentThumb) currentThumb.src = url;
     setDirty(getPath(currentImg), url, 'image');
     document.getElementById('edImgModal').classList.remove('show');
   }
@@ -261,6 +299,11 @@ include 'includes/layout-start.php';
   });
   document.getElementById('edSections').addEventListener('click', function(){
     document.getElementById('edSectionsPanel').classList.toggle('show');
+  });
+  document.getElementById('edImages').addEventListener('click', function(){
+    var p = document.getElementById('edImagesPanel');
+    p.classList.toggle('show');
+    if (p.classList.contains('show') && editing) buildImages();
   });
   document.getElementById('edDevice').addEventListener('click', function(){
     document.getElementById('edFrameWrap').classList.toggle('mobile');
