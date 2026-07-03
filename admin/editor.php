@@ -47,6 +47,15 @@ include 'includes/layout-start.php';
 </style>
 
 <div class="ed-toolbar">
+  <select id="edPage" class="form-control" style="width:auto;min-width:150px;font-weight:600;">
+    <option value="index">🏠 الصفحة الرئيسية</option>
+    <option value="about">من نحن</option>
+    <option value="contact">تواصل معنا</option>
+    <option value="offers">العروض</option>
+    <option value="privacy-policy">سياسة الخصوصية</option>
+    <option value="shipping-policy">سياسة الشحن</option>
+    <option value="terms">الشروط والأحكام</option>
+  </select>
   <button class="btn btn-primary btn-sm" id="edToggle"><i class="fas fa-pen"></i> تفعيل التعديل</button>
   <button class="btn btn-outline btn-sm" id="edSections"><i class="fas fa-layer-group"></i> السكاشن</button>
   <button class="btn btn-outline btn-sm" id="edImages"><i class="fas fa-images"></i> الصور</button>
@@ -95,6 +104,25 @@ include 'includes/layout-start.php';
 (function () {
   var PAGE = 'index';
   var frame = document.getElementById('siteFrame');
+
+  function resetEditUI(){
+    editing = false; dirty = {}; refreshDirty();
+    var t = document.getElementById('edToggle');
+    t.innerHTML = '<i class="fas fa-pen"></i> تفعيل التعديل';
+    t.classList.remove('btn-outline'); t.classList.add('btn-primary');
+    var m = document.getElementById('edMode'); m.className = 'ed-badge off'; m.textContent = 'وضع المعاينة';
+    document.getElementById('edSectionsPanel').classList.remove('show');
+    document.getElementById('edImagesPanel').classList.remove('show');
+  }
+
+  document.getElementById('edPage').addEventListener('change', function(){
+    if (Object.keys(dirty).length && !confirm('لديك تغييرات غير محفوظة — الانتقال سيتجاهلها. متابعة؟')) {
+      this.value = PAGE; return;
+    }
+    PAGE = this.value;
+    resetEditUI();
+    frame.src = '../' + PAGE + '.html?edit=1';
+  });
   var dirty = {};                 // key -> {key, value, type}
   var editing = false;
   var currentImg = null;
