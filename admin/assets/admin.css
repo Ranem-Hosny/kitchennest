@@ -733,9 +733,9 @@ body.login-body {
   .page-header { flex-direction: column; align-items: stretch; gap: 12px; }
   .page-header .btn { justify-content: center; }
 
-  /* Two-column form layouts (e.g. collection/product edit) stack */
-  [style*="grid-template-columns:1fr 320px"],
-  [style*="grid-template-columns:1fr 340px"] { display: block !important; }
+  /* Any inline multi-column page layout (dashboard, forms, message view)
+     collapses to a single column — keeps the grid so gaps are preserved */
+  .page-content [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
 
   /* ── Tables → stacked cards ──────────────────────────────── */
   .table-wrap { overflow-x: visible; }
