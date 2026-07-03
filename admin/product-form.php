@@ -21,9 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name        = trim($_POST['name'] ?? '');
     $category    = trim($_POST['category'] ?? '');
     $subcategory = trim($_POST['subcategory'] ?? '');
-    $price       = (float)($_POST['price'] ?? 0);
-    $old_price   = $_POST['old_price'] !== '' ? (float)$_POST['old_price'] : null;
-    $discount    = (int)($_POST['discount'] ?? 0);
+    // Pricing: the ORIGINAL (before-discount) price is the required field.
+    // Discount % auto-derives the after-discount price (or it can be typed).
+    $orig      = (float)($_POST['orig_price'] ?? 0);
+    $discount  = max(0, min(100, (int)($_POST['discount'] ?? 0)));
+    $afterIn   = (($_POST['after_price'] ?? '') !== '') ? (float)$_POST['after_price'] : null;
+    if ($discount > 0 || ($afterIn !== null && $afterIn > 0 && $afterIn < $orig)) {
+        $after = ($afterIn !== null && $afterIn > 0) ? $afterIn : round($orig * (1 - $discount / 100), 2);
+        if ($discount <= 0 && $orig > 0) $discount = (int)round((1 - $after / $orig) * 100);
+        $price     = $after;   // what the customer pays
+        $old_price = $orig;    // shown with a strikethrough
+    } else {
+        $price     = $orig;
+        $old_price = null;
+        $discount  = 0;
+    }
     $short_desc  = trim($_POST['short_desc'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $material    = trim($_POST['material'] ?? '');
@@ -72,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$name)                         $errors[] = 'اسم المنتج مطلوب.';
     if (!$category)                     $errors[] = 'الفئة مطلوبة.';
-    if ($price <= 0)                    $errors[] = 'السعر يجب أن يكون أكبر من صفر.';
+    if ($orig <= 0)                     $errors[] = 'السعر (قبل الخصم) مطلوب ويجب أن يكون أكبر من صفر.';
 
     if (empty($errors)) {
         $slug = 'product-' . time() . '-' . rand(100, 999);
@@ -177,25 +189,46 @@ include 'includes/layout-start.php';
         <span class="card-title"><i class="fas fa-tag" style="color:var(--success)"></i> السعر</span>
       </div>
       <div class="card-body">
+        <?php
+          // Derive form values: original = old_price if discounted, else price
+          $hasDisc  = ($product['old_price'] ?? 0) > 0;
+          $origVal  = $hasDisc ? $product['old_price'] : ($product['price'] ?? '');
+          $afterVal = $hasDisc ? $product['price'] : '';
+        ?>
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">السعر الحالي (EGP) <span style="color:var(--danger)">*</span></label>
-            <input type="number" name="price" class="form-control" required min="0" step="0.01"
-                   placeholder="0.00" value="<?= val($product, 'price') ?>">
-          </div>
-          <div class="form-group">
-            <label class="form-label">السعر قبل الخصم (EGP)</label>
-            <input type="number" name="old_price" class="form-control" min="0" step="0.01"
-                   placeholder="اتركه فارغاً إن لم يكن هناك خصم"
-                   value="<?= val($product, 'old_price') ?>">
+            <label class="form-label">السعر قبل الخصم (EGP) <span style="color:var(--danger)">*</span></label>
+            <input type="number" name="orig_price" id="origPrice" class="form-control" required min="0" step="0.01"
+                   placeholder="السعر الأصلي للمنتج" value="<?= esc((string)$origVal) ?>" oninput="calcAfter()">
+            <span class="form-hint">هذا هو سعر المنتج الأساسي (المطلوب دائماً).</span>
           </div>
           <div class="form-group">
             <label class="form-label">نسبة الخصم (%)</label>
-            <input type="number" name="discount" class="form-control" min="0" max="100"
-                   placeholder="0" value="<?= val($product, 'discount', '0') ?>">
-            <span class="form-hint">سيُحسب تلقائياً من الفارق إن لم تدخله</span>
+            <input type="number" name="discount" id="discPct" class="form-control" min="0" max="100"
+                   placeholder="0" value="<?= val($product, 'discount', '0') ?>" oninput="calcAfter()">
+            <span class="form-hint">اتركها 0 إن لم يكن هناك خصم.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">السعر بعد الخصم (EGP)</label>
+            <input type="number" name="after_price" id="afterPrice" class="form-control" min="0" step="0.01"
+                   placeholder="يُحسب تلقائياً" value="<?= esc((string)$afterVal) ?>" oninput="calcDisc()">
+            <span class="form-hint">يتولّد تلقائياً من الخصم — أو اكتبه بيدك ونحسب النسبة.</span>
           </div>
         </div>
+        <script>
+          function calcAfter(){
+            var o=parseFloat(document.getElementById('origPrice').value)||0;
+            var d=parseFloat(document.getElementById('discPct').value)||0;
+            if(o>0 && d>0){ document.getElementById('afterPrice').value=(Math.round(o*(1-d/100)*100)/100); }
+            else if(d<=0){ document.getElementById('afterPrice').value=''; }
+          }
+          function calcDisc(){
+            var o=parseFloat(document.getElementById('origPrice').value)||0;
+            var a=parseFloat(document.getElementById('afterPrice').value)||0;
+            if(o>0 && a>0 && a<o){ document.getElementById('discPct').value=Math.round((1-a/o)*100); }
+            else if(a>=o || a<=0){ document.getElementById('discPct').value=0; }
+          }
+        </script>
       </div>
     </div>
 

@@ -30,7 +30,7 @@ if (searchQ) {
     catBanner.style.display = 'block';
     document.getElementById('catBannerImg').src = category.img;
     document.getElementById('catBannerImg').alt = category.name;
-    document.getElementById('catBannerTitle').innerHTML = `${category.icon} ${category.name}`;
+    document.getElementById('catBannerTitle').innerHTML = category.name;
     const count = PRODUCTS.filter(p => p.category === catId).length;
     document.getElementById('catBannerCount').textContent = `${count} منتج متاح`;
   }

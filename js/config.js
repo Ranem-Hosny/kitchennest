@@ -16,6 +16,9 @@ const CONFIG = {
      Set to 0 for free shipping on all orders               */
   shippingFee: 50,                         // ← CHANGE THIS
 
+  /* ── Offers countdown duration (hours) ───────────────────── */
+  offerHours: 24,
+
   /* ── Currency label ──────────────────────────────────────── */
   currency: 'EGP',
 
@@ -54,6 +57,7 @@ const CONFIG = {
     if (s.whatsapp_number)  CONFIG.whatsappNumber = s.whatsapp_number;
     if (s.instapay_number)  CONFIG.instaPayNumber = s.instapay_number;
     if (s.shipping_fee !== undefined && s.shipping_fee !== '') CONFIG.shippingFee = parseFloat(s.shipping_fee) || 0;
+    if (s.offer_hours && parseInt(s.offer_hours) > 0) CONFIG.offerHours = parseInt(s.offer_hours);
     if (s.store_name)     CONFIG.storeName = s.store_name;
     if (s.store_email)    CONFIG.storeEmail = s.store_email;
     if (s.store_phone)  { CONFIG.storePhone = s.store_phone; CONFIG.storeWhatsApp = s.store_phone; }

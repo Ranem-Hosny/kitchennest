@@ -8,7 +8,8 @@ $db = adminDB();
 // Stats
 $totalOrders   = (int)$db->query("SELECT COUNT(*) FROM orders")->fetchColumn();
 $pendingOrders = (int)$db->query("SELECT COUNT(*) FROM orders WHERE status='pending'")->fetchColumn();
-$totalRevenue  = (float)$db->query("SELECT COALESCE(SUM(total),0) FROM orders WHERE status != 'cancelled'")->fetchColumn();
+// Real revenue = accepted sales only (confirmed/shipped/delivered), computed live from orders
+$totalRevenue  = (float)$db->query("SELECT COALESCE(SUM(total),0) FROM orders WHERE status IN ('confirmed','shipped','delivered')")->fetchColumn();
 $totalMessages = (int)$db->query("SELECT COUNT(*) FROM contacts WHERE is_read=0")->fetchColumn();
 $totalProducts = 0;
 try { $totalProducts = (int)$db->query("SELECT COUNT(*) FROM products")->fetchColumn(); } catch(Exception $e){}

@@ -126,7 +126,9 @@ const catSlider = document.getElementById('catSlider');
 if (catSlider) {
   catSlider.innerHTML = CATEGORIES.map(c => `
     <a href="category.html?cat=${c.id}" class="cat-card">
-      <span class="cat-card__icon">${c.icon}</span>
+      <span class="cat-card__icon">${c.img
+        ? `<img src="${c.img}" alt="${c.name}" class="cat-card__img" loading="lazy">`
+        : (c.icon || '<i class="fa-solid fa-tag"></i>')}</span>
       <span class="cat-card__name">${c.name}</span>
     </a>`).join('');
 
@@ -225,32 +227,6 @@ if (collectionsGrid) {
         <div class="collection-card__arrow">←</div>
       </div>
     </a>`).join('');
-}
-
-// ── آراء العملاء ─────────────────────────────────────────
-const REVIEWS = [
-  { name: 'سارة أحمد', rating: 5, comment: 'أحببت طقم الطهي الجديد! الجودة رائعة والطلاء غير اللاصق لا يزال ممتازاً بعد شهور من الاستخدام اليومي.', date: 'مارس 2025', initial: 'س' },
-  { name: 'محمد علي', rating: 5, comment: 'طلبت عبر واتساب والتجربة كانت سلسة جداً. وصل طقم السكاكين في تغليف رائع. جودة فاقت توقعاتي!', date: 'أبريل 2025', initial: 'م' },
-  { name: 'ليلى حسن', rating: 5, comment: 'طقم المائدة مذهل! ضيوفي دائماً يثنون على الأطباق الجميلة. التوصيل كان سريعاً والتغليف ممتاز.', date: 'فبراير 2025', initial: 'ل' },
-  { name: 'عمر خالد', rating: 4, comment: 'أسعار رائعة مقابل جودة حقيقية. طقم أدوات السيليكون غيّر طريقة طهيي. سأطلب مرة أخرى بالتأكيد.', date: 'يناير 2025', initial: 'ع' },
-  { name: 'نور إبراهيم', rating: 5, comment: 'حافظات الطعام الزجاجية هي بالضبط ما كنت أبحث عنه. شفافة، محكمة الإغلاق، والجودة أفضل مما توقعت.', date: 'مارس 2025', initial: 'ن' },
-  { name: 'فاطمة يوسف', rating: 5, comment: 'البراد التركي رائع! يعمل بشكل مثالي في كل مرة. خدمة العملاء كانت ودودة ومفيدة جداً على واتساب.', date: 'أبريل 2025', initial: 'ف' },
-];
-
-const reviewsGrid = document.getElementById('reviewsGrid');
-if (reviewsGrid) {
-  reviewsGrid.innerHTML = REVIEWS.map(r => `
-    <div class="review-card">
-      <div class="review-card__header">
-        <div class="review-card__avatar">${r.initial}</div>
-        <div>
-          <div class="review-card__name">${r.name}</div>
-          <div style="display:flex;gap:4px;margin:3px 0">${renderStars(r.rating)}</div>
-          <div class="review-card__date">${r.date}</div>
-        </div>
-      </div>
-      <p class="review-card__comment">${r.comment}</p>
-    </div>`).join('');
 }
 
 // رابط واتساب CTA

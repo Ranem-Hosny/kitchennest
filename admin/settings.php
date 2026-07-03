@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['_action'] ?? '') === 'chan
 // Save settings
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['_action'] ?? '') === 'save_settings') {
     $fields = ['store_name','store_email','store_phone','store_address',
-               'whatsapp_number','instapay_number','shipping_fee',
+               'whatsapp_number','instapay_number','shipping_fee','offer_hours',
                'social_instagram','social_facebook','social_tiktok'];
     try {
         $upsert = $db->prepare("INSERT INTO settings (`key`, value) VALUES (?,?) ON DUPLICATE KEY UPDATE value=VALUES(value)");
@@ -53,6 +53,7 @@ $defaults = [
     'whatsapp_number'   => '201551677016',
     'instapay_number'   => '01551677016',
     'shipping_fee'      => '50',
+    'offer_hours'       => '24',
     'social_instagram'  => '#',
     'social_facebook'   => '#',
     'social_tiktok'     => '#',
@@ -140,6 +141,12 @@ include 'includes/layout-start.php';
               <label class="form-label">رسوم الشحن (EGP)</label>
               <input type="number" name="shipping_fee" class="form-control" min="0" step="0.01"
                      value="<?= sv($settings,'shipping_fee') ?>">
+            </div>
+            <div class="form-group">
+              <label class="form-label">مدة عدّاد العروض (بالساعات)</label>
+              <input type="number" name="offer_hours" class="form-control" min="1" max="720"
+                     value="<?= sv($settings,'offer_hours') ?: '24' ?>">
+              <span class="form-hint">العدّاد التنازلي في صفحة العروض يبدأ من هذا العدد من الساعات.</span>
             </div>
           </div>
         </div>

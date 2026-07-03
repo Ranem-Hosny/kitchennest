@@ -86,8 +86,12 @@ include 'includes/layout-start.php';
             <tr>
               <td>
                 <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:<?= esc($c['color'] ?: '#FF6B00') ?>1A;color:<?= esc($c['color'] ?: '#FF6B00') ?>;flex-shrink:0;">
-                    <i class="fas <?= esc($c['icon'] ?: 'fa-tag') ?>"></i>
+                  <div style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;">
+                    <?php if (!empty($c['image_url'])): ?>
+                      <img src="<?= esc($c['image_url']) ?>" alt="<?= esc($c['name']) ?>" style="width:100%;height:100%;object-fit:cover;">
+                    <?php else: ?>
+                      <i class="fas fa-image" style="color:var(--text-muted)"></i>
+                    <?php endif; ?>
                   </div>
                   <span style="font-weight:600;font-size:13px;"><?= esc($c['name']) ?></span>
                 </div>

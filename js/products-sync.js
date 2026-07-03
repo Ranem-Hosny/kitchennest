@@ -61,8 +61,8 @@
 })();
 
 // ── Merge dashboard categories into the site's CATEGORIES ────
-// New categories added in the admin appear on the site; existing
-// ones get their name/icon/colour refreshed (banner image kept).
+// Dashboard is the source of truth for the category name, image and
+// display order. New categories appear on the site automatically.
 (function () {
   var MAP = { spoons: 'spoons-forks', dinnersets: 'dinner-sets', tools: 'kitchen-tools' };
   var FALLBACK_IMG = '/assets/eee9761d4a6ee6e40e5d99a1a609991f.jpg';
@@ -75,17 +75,24 @@
     var data = JSON.parse(xhr.responseText);
     if (!data.success || !Array.isArray(data.categories)) return;
 
+    var order = [];
     data.categories.forEach(function (c) {
       var id = MAP[c.slug] || c.slug;
-      var icon = c.icon ? '<i class="fa-solid ' + c.icon + '"></i>' : '<i class="fa-solid fa-utensils"></i>';
+      order.push(id);
       var existing = CATEGORIES.find(function (x) { return x.id === id; });
       if (existing) {
         existing.name = c.name || existing.name;
-        if (c.icon)  existing.icon = icon;
-        if (c.color) existing.color = c.color;
+        if (c.image_url) existing.img = c.image_url;   // dashboard image wins
       } else {
-        CATEGORIES.push({ id: id, name: c.name, icon: icon, color: c.color || '#FF6B00', img: FALLBACK_IMG });
+        CATEGORIES.push({ id: id, name: c.name, img: c.image_url || FALLBACK_IMG, icon: '', color: c.color || '#FF6B00' });
       }
+    });
+
+    // Reorder to match the dashboard's sort order (categories-api is sorted by sort_order)
+    CATEGORIES.sort(function (a, b) {
+      var ia = order.indexOf(a.id), ib = order.indexOf(b.id);
+      if (ia === -1) ia = 999; if (ib === -1) ib = 999;
+      return ia - ib;
     });
   } catch (e) {
     console.warn('[CategoriesSync] Failed to sync categories:', e);

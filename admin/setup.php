@@ -126,6 +126,7 @@ $defaultSettings = [
     'whatsapp_number'  => '201551677016',
     'instapay_number'  => '01551677016',
     'shipping_fee'     => '50',
+    'offer_hours'      => '24',
     'social_instagram' => '#',
     'social_facebook'  => '#',
     'social_tiktok'    => '#',

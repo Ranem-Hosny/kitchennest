@@ -47,10 +47,16 @@
 <script src="js/favorites.js"></script>
 <script src="js/components.js"></script>
 <script>
-// Countdown timer (ends in ~24h from page load)
+// Countdown timer — duration set from the dashboard (إعدادات المتجر → مدة عدّاد العروض)
 (function() {
+  const hours = (window.CONFIG && CONFIG.offerHours > 0) ? CONFIG.offerHours : 24;
   let end = sessionStorage.getItem('kn_offer_end');
-  if (!end) { end = Date.now() + 23 * 3600000 + 59 * 60000 + 59000; sessionStorage.setItem('kn_offer_end', end); }
+  let storedH = sessionStorage.getItem('kn_offer_hours');
+  if (!end || String(storedH) !== String(hours)) {
+    end = Date.now() + hours * 3600000 - 1000;
+    sessionStorage.setItem('kn_offer_end', end);
+    sessionStorage.setItem('kn_offer_hours', hours);
+  }
   function tick() {
     const diff = Math.max(0, parseInt(end) - Date.now());
     document.getElementById('cH').textContent = String(Math.floor(diff/3600000)).padStart(2,'0');

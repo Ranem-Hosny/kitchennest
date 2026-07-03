@@ -64,7 +64,7 @@ function renderHeader() {
             الفئات <i class="fa-solid fa-chevron-down" style="font-size:11px"></i>
           </a>
           <div class="nav-dropdown__menu">
-            ${CATEGORIES.map(c => `<a href="category.html?cat=${c.id}">${c.icon} ${c.name}</a>`).join('')}
+            ${CATEGORIES.map(c => `<a href="category.html?cat=${c.id}">${c.img ? `<img src="${c.img}" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:6px">` : (c.icon || '')} ${c.name}</a>`).join('')}
           </div>
         </div>
         <a href="offers.html" class="${currentPath === 'offers.html' ? 'active' : ''}" style="color:#FF6B00;font-weight:600"><i class="fa-solid fa-fire"></i> العروض</a>
@@ -75,7 +75,7 @@ function renderHeader() {
     <div class="mobile-menu" id="mobileMenu">
       <a href="index.html">الرئيسية</a>
       <a href="category.html">جميع الفئات</a>
-      ${CATEGORIES.map(c => `<a href="category.html?cat=${c.id}" class="mobile-menu__sub">${c.icon} ${c.name}</a>`).join('')}
+      ${CATEGORIES.map(c => `<a href="category.html?cat=${c.id}" class="mobile-menu__sub">${c.img ? `<img src="${c.img}" alt="" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:6px">` : (c.icon || '')} ${c.name}</a>`).join('')}
       <a href="offers.html" style="color:#FF6B00"><i class="fa-solid fa-fire"></i> العروض</a>
       <a href="favorites.html"><i class="fa-regular fa-heart"></i> المفضلة</a>
       <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> السلة</a>

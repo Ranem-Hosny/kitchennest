@@ -372,7 +372,8 @@ h4 { font-size: 1.1rem; font-family: var(--font-main); }
   text-decoration: none; color: var(--text);
 }
 .cat-card:hover, .cat-card--active { border-color: var(--primary); background: var(--primary-bg); color: var(--primary); }
-.cat-card__icon { font-size: 32px; line-height: 1; }
+.cat-card__icon { font-size: 32px; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.cat-card__img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: var(--white); }
 .cat-card__name { font-size: 12px; font-weight: 600; color: inherit; }
 .cat-slider-btn {
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
