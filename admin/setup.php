@@ -94,6 +94,18 @@ $log .= runSQL($db, "
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ", "جدول collections");
 
+// ── site_content table (المحرر المرئي) ─────────────────────
+$log .= runSQL($db, "
+    CREATE TABLE IF NOT EXISTS `site_content` (
+      `content_key` VARCHAR(255) NOT NULL,
+      `page`        VARCHAR(60)  NOT NULL DEFAULT 'index',
+      `value`       LONGTEXT     DEFAULT NULL,
+      `type`        VARCHAR(20)  NOT NULL DEFAULT 'text',
+      `updated_at`  DATETIME     NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+      PRIMARY KEY (`page`, `content_key`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+", "جدول site_content");
+
 // ── Default admin user ──────────────────────────────────────
 $exists = $db->query("SELECT COUNT(*) FROM admin_users")->fetchColumn();
 if (!$exists) {

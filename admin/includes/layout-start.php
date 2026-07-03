@@ -47,6 +47,11 @@ $topActions = $topbarActions ?? '';
       نظرة عامة
     </a>
 
+    <a href="editor.php" class="nav-item <?= $page === 'editor' ? 'active' : '' ?>">
+      <span class="nav-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+      محرر الموقع
+    </a>
+
     <a href="orders.php" class="nav-item <?= $page === 'orders' ? 'active' : '' ?>">
       <span class="nav-icon"><i class="fas fa-box-open"></i></span>
       الطلبات

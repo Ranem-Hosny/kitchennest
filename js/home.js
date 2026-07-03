@@ -27,8 +27,10 @@
     resetAuto();
   }
 
+  const EDIT_MODE = location.search.indexOf('edit=1') > -1; // visual editor — freeze carousels
   function resetAuto() {
     clearInterval(autoPlay);
+    if (EDIT_MODE) return;
     autoPlay = setInterval(() => goTo(current + 1), 5500);
   }
 
@@ -150,6 +152,7 @@ if (catSlider) {
   }
   function startCatAuto() {
     clearInterval(catAutoTimer);
+    if (location.search.indexOf('edit=1') > -1) return; // frozen in visual editor
     catAutoTimer = setInterval(catAutoStep, 1800);
   }
   function stopCatAuto() { clearInterval(catAutoTimer); }
