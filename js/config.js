@@ -38,3 +38,28 @@ const CONFIG = {
   /* ── Free shipping threshold (0 = always paid) ───────────── */
   freeShippingAbove: 0,
 };
+
+// ── Sync live store settings from the dashboard (DB) ─────────
+// Overrides the defaults above with whatever the owner set in the
+// admin panel (shipping fee, WhatsApp, store name, socials…).
+(function () {
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'php/settings-api.php?_=' + Date.now(), false); // sync, before other scripts use CONFIG
+    xhr.send(null);
+    if (xhr.status !== 200) return;
+    var data = JSON.parse(xhr.responseText);
+    if (!data.success || !data.settings) return;
+    var s = data.settings;
+    if (s.whatsapp_number)  CONFIG.whatsappNumber = s.whatsapp_number;
+    if (s.instapay_number)  CONFIG.instaPayNumber = s.instapay_number;
+    if (s.shipping_fee !== undefined && s.shipping_fee !== '') CONFIG.shippingFee = parseFloat(s.shipping_fee) || 0;
+    if (s.store_name)     CONFIG.storeName = s.store_name;
+    if (s.store_email)    CONFIG.storeEmail = s.store_email;
+    if (s.store_phone)  { CONFIG.storePhone = s.store_phone; CONFIG.storeWhatsApp = s.store_phone; }
+    if (s.store_address)  CONFIG.storeAddress = s.store_address;
+    if (s.social_instagram) CONFIG.social.instagram = s.social_instagram;
+    if (s.social_facebook)  CONFIG.social.facebook = s.social_facebook;
+    if (s.social_tiktok)    CONFIG.social.tiktok = s.social_tiktok;
+  } catch (e) { console.warn('[SettingsSync] failed:', e); }
+})();

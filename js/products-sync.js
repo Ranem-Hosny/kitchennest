@@ -59,3 +59,35 @@
     console.warn('[ProductsSync] Failed to sync live product data:', e);
   }
 })();
+
+// ── Merge dashboard categories into the site's CATEGORIES ────
+// New categories added in the admin appear on the site; existing
+// ones get their name/icon/colour refreshed (banner image kept).
+(function () {
+  var MAP = { spoons: 'spoons-forks', dinnersets: 'dinner-sets', tools: 'kitchen-tools' };
+  var FALLBACK_IMG = '/assets/eee9761d4a6ee6e40e5d99a1a609991f.jpg';
+  try {
+    if (typeof CATEGORIES === 'undefined') return;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'php/categories-api.php?_=' + Date.now(), false);
+    xhr.send(null);
+    if (xhr.status !== 200) return;
+    var data = JSON.parse(xhr.responseText);
+    if (!data.success || !Array.isArray(data.categories)) return;
+
+    data.categories.forEach(function (c) {
+      var id = MAP[c.slug] || c.slug;
+      var icon = c.icon ? '<i class="fa-solid ' + c.icon + '"></i>' : '<i class="fa-solid fa-utensils"></i>';
+      var existing = CATEGORIES.find(function (x) { return x.id === id; });
+      if (existing) {
+        existing.name = c.name || existing.name;
+        if (c.icon)  existing.icon = icon;
+        if (c.color) existing.color = c.color;
+      } else {
+        CATEGORIES.push({ id: id, name: c.name, icon: icon, color: c.color || '#FF6B00', img: FALLBACK_IMG });
+      }
+    });
+  } catch (e) {
+    console.warn('[CategoriesSync] Failed to sync categories:', e);
+  }
+})();
